@@ -1,0 +1,1 @@
+export {}; // Esto convierte a AppRoutes.tsx en un módulo
