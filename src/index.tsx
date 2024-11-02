@@ -1,19 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import AuthLayout from './features/Auth/pages/AuthLayout';
+import Login from './features/Auth/pages/Login';
 import reportWebVitals from './reportWebVitals';
+import LoginView from './features/Auth/pages/auth/LoginView';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter>
+      <Routes>
+
+        <Route element={<AuthLayout />}>
+          <Route path="/auth/login" element={<LoginView />} />
+        </Route>
+
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();

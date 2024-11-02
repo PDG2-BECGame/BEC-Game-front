@@ -18,7 +18,11 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "baseUrl": "./",  // Cambiado para apuntar al directorio raíz
+    "paths": {
+      "@/*": ["src/*"]  // Modificado para que el alias apunte a la carpeta src
+    }
   },
   "include": [
     "src"
