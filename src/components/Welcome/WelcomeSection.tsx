@@ -1,4 +1,4 @@
-import VideoPlayer from "../../Videos/VideoPlayer"
+import VideoPlayer from "../../components/Videos/VideoPlayer"
 
 export const WelcomeSection = () => {
     return (

@@ -1,4 +1,4 @@
-import Level from "../Roadmap/Level";
+import Level from "./Level";
 
 export const Roadmap = () => {
     return (
@@ -8,9 +8,9 @@ export const Roadmap = () => {
             </h2>
             <div className="flex flex-col justify-center items-center flex-grow gap-6">
                 {/* Los niveles estarán centrados y ocuparán el espacio disponible */}
-                <Level />
-                <Level />
-                <Level />
+                <Level titulo={"Nivel 1"}/>
+                <Level titulo={"Nivel 2"}/>
+                <Level titulo={"Nivel 3"}/>
             </div>
         </div>
     );
