@@ -3,8 +3,8 @@ import VideoPlayer from "../../components/Videos/VideoPlayer"
 export const WelcomeSection = () => {
     return (
         <div className="flex gap-8 px-20">
-            <div className="flex flex-col items-center pt-20" >
-                <h1 className="font-poppins text-4xl">
+            <div className="flex flex-col items-center pt-20 justify-start" >
+                <h1 className="font-poppins text-4xl flex justify-start">
                     <b>¡Te damos la bienvenida!</b>
                 </h1>
                 <p className="font-poppins pt-4">

@@ -7,9 +7,10 @@ import ayuda from '../../assets/Ayuda.svg';
 
 const Sidebar = () => {
   return (
-    <div className="bg-gradient-to-r from-customBlue to-customPurple text-white h-screen w-full max-w-56 flex flex-col items-center py-4">
+    //<div className="bg-gradient-to-r from-customBlue to-customPurple text-white w-full max-w-56 flex flex-col items-center py-4 h-screen">
+    <div className="bg-gradient-to-r from-customBlue to-customPurple text-white w-56 max-w-56 h-screen fixed top-0 left-0 flex flex-col items-center py-4">
       <img src={logo} alt="Logo" className="w-24 h-24 mb-4" />
-      <nav className="flex flex-col space-y-4 py-12">
+      <nav className="flex flex-col space-y-4 py-12 fixed">
         <a href="/" className="font-poppins flex items-center hover:text-gray-300 gap-2">
           <img src={inicioImg} alt='Imagen de inicio'/>
           Inicio
