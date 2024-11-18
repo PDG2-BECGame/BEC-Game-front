@@ -4,7 +4,22 @@ module.exports = {
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primaryPurple: {
+          DEFAULT: '#592BBC', 
+          dark: '#360B9E' ,
+        },
+        customBlue: '#041D31',
+        customPurple: '#592BBC',
+      },
+      fontFamily: {
+        archivo: ['"Archivo Black"', 'sans-serif'],
+        bebas: ['"Bebas Neue"', 'cursive'],
+        poppins: ['Poppins', 'sans-serif'],
+        schibsted: ['"Schibsted Grotesk"', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
 };

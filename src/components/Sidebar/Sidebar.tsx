@@ -1,14 +1,31 @@
 import React from 'react';
-import logo from '../../assets/logo.svg'; // Ajuste de ruta para el logo
+import logo from '../../assets/BePRO_logo.svg'; // Ajuste de ruta para el logo
+import inicioImg from '../../assets/Inicio.svg';
+import perfil from '../../assets/Perfil.svg'; 
+import clasificado from '../../assets/tabla_clasificacion.svg'; 
+import ayuda from '../../assets/Ayuda.svg'; 
 
 const Sidebar = () => {
   return (
-    <div className="bg-gray-800 text-white h-screen w-60 flex flex-col items-center py-4">
+    <div className="bg-gradient-to-r from-customBlue to-customPurple text-white h-screen w-full max-w-56 flex flex-col items-center py-4">
       <img src={logo} alt="Logo" className="w-24 h-24 mb-4" />
-      <nav className="flex flex-col space-y-4">
-        <a href="/" className="hover:text-gray-300">Inicio</a>
-        <a href="/profile" className="hover:text-gray-300">Perfil</a>
-        <a href="/classification" className="hover:text-gray-300">Clasificado</a>
+      <nav className="flex flex-col space-y-4 py-12">
+        <a href="/" className="font-poppins flex items-center hover:text-gray-300 gap-2">
+          <img src={inicioImg} alt='Imagen de inicio'/>
+          Inicio
+        </a>
+        <a href="/profile" className="font-poppins flex items-center hover:text-gray-300 gap-2">
+          <img src={perfil} alt='Imagen de inicio'/>
+          Perfil
+        </a>
+        <a href="/classification" className="font-poppins flex items-center hover:text-gray-300 gap-2">
+          <img src={clasificado} alt='Imagen de inicio'/>
+          Clasificado
+        </a>
+        <a href="/classification" className="font-poppins flex items-center hover:text-gray-300 gap-2">
+          <img src={ayuda} alt='Imagen de inicio'/>
+          Ayuda
+        </a>
       </nav>
     </div>
   );

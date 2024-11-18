@@ -7,8 +7,8 @@ interface VideoPlayerProps {
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoId }) => {
   const opts = {
-    height: '390',
-    width: '640',
+    height: '350',
+    width: '600',
     playerVars: {
       autoplay: 0,
     },
@@ -17,8 +17,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoId }) => {
   return (
     <div>
       <YouTube videoId={videoId} opts={opts} />
-      <p>Mira el video antes de iniciar</p>
-      <p>Te daremos el contexto de la simulación</p>
     </div>
   );
 };
