@@ -1,4 +1,6 @@
 import Level from "./Level";
+import { levels } from "../../../consts/values.d";
+
 
 export const Roadmap = () => {
     return (
@@ -6,11 +8,15 @@ export const Roadmap = () => {
             <h2 className="font-poppins text-3xl mb-8 text-left">
                 <b>Niveles de aprendizaje</b>
             </h2>
-            <div className="flex flex-col justify-center items-center flex-grow gap-6">
+            <div className="flex flex-col flex-grow gap-6 pb-24">
                 {/* Los niveles estarán centrados y ocuparán el espacio disponible */}
-                <Level titulo={"Nivel 1"}/>
-                <Level titulo={"Nivel 2"}/>
-                <Level titulo={"Nivel 3"}/>
+                {levels.map(level => 
+                    <Level key={level.id} 
+                        nivel={level.nivel} 
+                        titulo={level.titulo} 
+                        puntaje={level.puntaje}
+                        descripcion={level.descripcion}
+                    />)}
             </div>
         </div>
     );

@@ -3,7 +3,7 @@ import VideoPlayer from "../../Videos/VideoPlayer"
 export const WelcomeSection = () => {
     return (
         <div className="flex gap-8 px-20">
-            <div className="flex flex-col items-center pt-20" >
+            <div className="pt-20" >
                 <h1 className="font-poppins text-4xl">
                     <b>¡Te damos la bienvenida!</b>
                 </h1>

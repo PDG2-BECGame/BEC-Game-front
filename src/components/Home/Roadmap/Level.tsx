@@ -2,20 +2,23 @@ import React from 'react';
 import { FaShieldAlt } from "react-icons/fa"; // Ejemplo de ícono decorativo
 
 interface LevelProps {
-    titulo: string;
+    nivel: string,
+    titulo: string,
+    puntaje: number,
+    descripcion: string
 }
 
 
-const Level: React.FC<LevelProps> = ({ titulo }) => {
+const Level: React.FC<LevelProps> = ({ nivel, titulo, puntaje, descripcion }) => {
     return (
         <div className="flex flex-col p-6 border-2 border-red-300 rounded-xl shadow-md bg-white max-w-4xl w-full gap-4 font-poppins">
             {/* Encabezado */}
             <div className="flex flex-col">
-                <h3 className="text-xl font-bold text-black mb-1">{titulo}</h3>
+                <h3 className="text-xl font-bold text-black mb-1">{nivel}</h3>
                 <p className="text-sm text-black mb-1">
-                    Conciencia Crítica: Reconociendo la Amenaza del BEC
+                    {titulo}
                 </p>
-                <p className="text-sm font-bold text-purple-700 mb-4">Puntos: 0/500</p>
+                <p className="text-sm font-bold text-purple-700 mb-4">Puntos: {puntaje}/500</p>
             </div>
 
             {/* Contenido principal */}
@@ -29,11 +32,7 @@ const Level: React.FC<LevelProps> = ({ titulo }) => {
                 <div className="flex flex-col w-full md:w-3/4">
                     <p className="text-sm font-bold text-black mb-2">Descripción:</p>
                     <p className="text-black leading-6">
-                        El objetivo es enfatizar la importancia de reconocer y entender el
-                        Business Email Compromise (BEC) como una amenaza significativa en
-                        el entorno empresarial. Se busca que los usuarios comprendan las
-                        implicaciones de estos fraudes y la necesidad de estar alerta ante
-                        las tácticas que usan los estafadores.
+                        {descripcion}
                     </p>
                 </div>
             </div>
