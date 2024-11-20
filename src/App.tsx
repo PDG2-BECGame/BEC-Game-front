@@ -5,42 +5,51 @@ import Profile from './pages/Profile';  // Nueva ruta de Perfil
 import Classification from './pages/Classification';  // Nueva ruta de Clasificación
 import Login from './pages/Auth/Login';  // Ruta de Login
 import './App.css';
+import VideoTrainingPage from './pages/VideoTrainingPage'; // Importa VideoTrainingPage
 
 function App() {
-  return (
-    <Router>
-      <Routes>
-        {/* Rutas que usan el Layout */}
-        <Route
-          path="/"
-          element={
-            <Layout>
-              <Home />
-            </Layout>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <Layout>
-              <Profile />
-            </Layout>
-          }
-        />
-        <Route
-          path="/classification"
-          element={
-            <Layout>
-              <Classification />
-            </Layout>
-          }
-        />
-        
-        {/* Rutas que no usan el Layout */}
-        <Route path="/login" element={<Login />} />
-      </Routes>
-    </Router>
-  );
+    return (
+        <Router>
+            <Routes>
+                {/* Rutas que usan el Layout */}
+                <Route
+                    path="/"
+                    element={
+                        <Layout>
+                            <Home />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/profile"
+                    element={
+                        <Layout>
+                            <Profile />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/classification"
+                    element={
+                        <Layout>
+                            <Classification />
+                        </Layout>
+                    }
+                />
+                <Route
+                    path="/videotraininpage"
+                    element={
+                        <Layout>
+                            <VideoTrainingPage />
+                        </Layout>
+                    }
+                />
+
+                {/* Rutas que no usan el Layout */}
+                <Route path="/login" element={<Login />} />
+            </Routes>
+        </Router>
+    );
 }
 
 export default App;
