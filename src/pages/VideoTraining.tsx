@@ -15,8 +15,8 @@ const VideoTraining: React.FC = () => {
                 onButtonClick={handleQuizNavigation}
             />
 
-            {/* Eliminamos cualquier sombra innecesaria aquí */}
-            <div className="p-6 max-w-5xl mx-auto">
+            {/* Ajustar la alineación del contenido */}
+            <div className="p-6 max-w-5xl md:mx-0">
                 <TitleSection title="Clase 1" />
                 <p className="text-lg text-gray-700 mt-4">
                     Aquí puedes ver el video de entrenamiento relacionado con este nivel.
