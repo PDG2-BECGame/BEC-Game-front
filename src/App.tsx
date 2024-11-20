@@ -5,7 +5,7 @@ import Profile from './pages/Profile';  // Nueva ruta de Perfil
 import Classification from './pages/Classification';  // Nueva ruta de Clasificación
 import Login from './pages/Auth/Login';  // Ruta de Login
 import './App.css';
-import VideoTrainingPage from './pages/VideoTrainingPage'; // Importa VideoTrainingPage
+import VideoTraining from './pages/VideoTraining'; // Importa VideoTraining
 
 function App() {
     return (
@@ -37,10 +37,10 @@ function App() {
                     }
                 />
                 <Route
-                    path="/videotraininpage"
+                    path="/videoTraining"
                     element={
                         <Layout>
-                            <VideoTrainingPage />
+                            <VideoTraining />
                         </Layout>
                     }
                 />

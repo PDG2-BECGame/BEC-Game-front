@@ -1,7 +1,7 @@
 import React from "react";
-import HeaderSection from "../components/VideoTrainingPage/HeaderSection";
+import HeaderSection from "../components/VideoTraining/HeaderSection";
 
-const VideoTrainingPage: React.FC = () => {
+const VideoTraining: React.FC = () => {
     const handleQuizNavigation = () => {
         // Redirigir al quiz correspondiente
         console.log("Navegando al quiz...");
@@ -18,4 +18,4 @@ const VideoTrainingPage: React.FC = () => {
     );
 };
 
-export default VideoTrainingPage;
+export default VideoTraining;
