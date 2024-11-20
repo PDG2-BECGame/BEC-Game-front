@@ -1,14 +1,21 @@
-import React from 'react';
+import React from "react";
+import HeaderSection from "../components/VideoTrainingPage/HeaderSection";
 
-const LevelPage: React.FC = () => {
+const VideoTrainingPage: React.FC = () => {
+    const handleQuizNavigation = () => {
+        // Redirigir al quiz correspondiente
+        console.log("Navegando al quiz...");
+    };
+
     return (
-        <div className="p-6 max-w-4xl mx-auto">
-            <h1 className="text-3xl font-bold mb-4">Nivel 1</h1>
-            <p className="text-lg">
-                Bienvenido a la página del nivel. Aquí puedes explorar contenido relacionado con este nivel.
-            </p>
+        <div className="max-w-5xl mx-auto bg-white shadow-md rounded-xl overflow-hidden">
+            <HeaderSection
+                title="Nivel 1"
+                onButtonClick={handleQuizNavigation}
+            />
+            
         </div>
     );
 };
 
-export default LevelPage;
+export default VideoTrainingPage;
