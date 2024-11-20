@@ -8,13 +8,16 @@ const VideoTraining: React.FC = () => {
     };
 
     return (
-        <div className="bg-white shadow-md rounded-xl overflow-hidden">
+        <div className="bg-white rounded-xl overflow-hidden">
+            {/* Header Section */}
             <HeaderSection
                 title="Nivel 1"
                 onButtonClick={handleQuizNavigation}
             />
-            <div className="p-6 mt-8 max-w-5xl mx-auto">
-                <TitleSection title="Entrenamiento en Video" />
+
+            {/* Eliminamos cualquier sombra innecesaria aquí */}
+            <div className="p-6 max-w-5xl mx-auto">
+                <TitleSection title="Clase 1" />
                 <p className="text-lg text-gray-700 mt-4">
                     Aquí puedes ver el video de entrenamiento relacionado con este nivel.
                 </p>
