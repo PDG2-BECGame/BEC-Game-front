@@ -19,9 +19,9 @@ const VideoTraining: React.FC = () => {
             {/* Contenido principal */}
             <div className="p-6 max-w-5xl md:mx-0">
                 <TitleSection title="Clase 1" />
-                {/* Video Player */}
+                {/* Video Player con tamaño personalizado */}
                 <div className="mt-6">
-                    <VideoPlayer videoId="dQw4w9WgXcQ" /> {/* Reemplaza con el ID del video */}
+                    <VideoPlayer videoId="dQw4w9WgXcQ" width="850" height="480" />
                 </div>
             </div>
         </div>

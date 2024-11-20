@@ -3,12 +3,14 @@ import YouTube from 'react-youtube';
 
 interface VideoPlayerProps {
   videoId: string;
+  width?: string; // Propiedad opcional para ancho
+  height?: string; // Propiedad opcional para alto
 }
 
-const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoId }) => {
+const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoId, width = '600', height = '350' }) => {
   const opts = {
-    height: '350',
-    width: '600',
+    height, // Usar altura dinámica
+    width,  // Usar ancho dinámico
     playerVars: {
       autoplay: 0,
     },
@@ -22,3 +24,4 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoId }) => {
 };
 
 export default VideoPlayer;
+
