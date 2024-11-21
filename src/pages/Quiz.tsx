@@ -1,5 +1,7 @@
+// src/pages/Quiz.tsx
+
 import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom"; // Importa useNavigate si deseas redireccionar
+import { useNavigate, useParams } from "react-router-dom";
 import { questionsByLevel } from "../consts/questions.d";
 
 // Importa los componentes
@@ -28,12 +30,10 @@ const Quiz: React.FC = () => {
   const currentQuestion = questions[currentQuestionIndex];
 
   // Función para manejar la salida del quiz
-  const navigate = useNavigate(); // Hook para redireccionar
+  const navigate = useNavigate();
 
   const handleExit = () => {
-    // Aquí podemos agregar lógica adicional, como confirmar la salida
-    // Por ejemplo, mostrar un modal de confirmación
-    // Para este ejemplo, simplemente redireccionamos al usuario
+    // Aquí puedes agregar lógica adicional, como confirmar la salida
     navigate("/"); // Redirecciona a la página de inicio
   };
 
@@ -59,8 +59,8 @@ const Quiz: React.FC = () => {
       setHasAnswered(false);
     } else {
       alert(`¡Has completado el nivel! Tu puntuación es ${score}/${questions.length}`);
-      // Redirecciona al usuario a la página de resultados o reinicia el quiz
-      navigate("/"); // Redirecciona a la página de inicio, por ejemplo
+      // Redirecciona al usuario a la página de inicio
+      navigate("/");
     }
   };
 
@@ -71,13 +71,16 @@ const Quiz: React.FC = () => {
         currentLevel={currentLevel}
         score={score}
         totalQuestions={questions.length}
-        onExit={handleExit} // Pasamos la función handleExit
+        onExit={handleExit}
       />
 
       {/* Contenido principal */}
       <main className="flex-grow p-6 flex flex-col items-center justify-center pb-24">
         {/* Pregunta */}
-        <QuestionCard questionText={currentQuestion.question} />
+        <QuestionCard
+          questionText={currentQuestion.question}
+          image={currentQuestion.image} // Pasamos la imagen si existe
+        />
 
         {/* Opciones */}
         <Options
