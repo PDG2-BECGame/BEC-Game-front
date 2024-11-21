@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { questionsByLevel, Question } from "../consts/questions.d";
+import { questionsByLevel } from "../consts/questions.d";
 
 const Quiz: React.FC = () => {
     const { level } = useParams<{ level: string }>();
@@ -11,24 +11,38 @@ const Quiz: React.FC = () => {
         return <p>No hay preguntas para este nivel.</p>;
     }
 
+    // Estados
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedOption, setSelectedOption] = useState<number | null>(null);
     const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+    const [hasAnswered, setHasAnswered] = useState<boolean>(false);
+    const [score, setScore] = useState<number>(0);
 
     const currentQuestion = questions[currentQuestionIndex];
 
+    // Maneja la selección de una opción
     const handleOptionClick = (index: number) => {
+        if (hasAnswered) return; // Evita cambiar la respuesta después de seleccionar
         setSelectedOption(index);
-        setIsCorrect(index === currentQuestion.answer);
+        const correct = index === currentQuestion.answer;
+        setIsCorrect(correct);
+        setHasAnswered(true);
+
+        if (correct) {
+            setScore((prevScore) => prevScore + 1); // Actualiza la puntuación
+        }
     };
 
+    // Maneja el paso a la siguiente pregunta
     const handleNext = () => {
         if (currentQuestionIndex < questions.length - 1) {
-            setCurrentQuestionIndex(currentQuestionIndex + 1);
+            setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
             setSelectedOption(null);
             setIsCorrect(null);
+            setHasAnswered(false);
         } else {
-            alert("¡Has completado el nivel!");
+            alert(`¡Has completado el nivel! Tu puntuación es ${score}/${questions.length}`);
+            // Aquí puedes redirigir al usuario o reiniciar el cuestionario
         }
     };
 
@@ -37,7 +51,7 @@ const Quiz: React.FC = () => {
             {/* Header */}
             <header className="bg-blue-500 text-white p-4 flex justify-between items-center shadow-md">
                 <h1 className="text-xl font-bold">Nivel {currentLevel}</h1>
-                <p>Puntuación: 0/500</p>
+                <p>Puntuación: {score}/{questions.length}</p>
                 <button className="text-red-200 font-semibold hover:text-red-500 transition">X</button>
             </header>
 
@@ -48,24 +62,39 @@ const Quiz: React.FC = () => {
                     <h2 className="text-lg font-semibold text-gray-800">{currentQuestion.question}</h2>
                 </div>
 
-                {/* Respuestas */}
+                {/* Opciones */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl">
-                    {currentQuestion.options.map((option, index) => (
-                        <button
-                            key={index}
-                            onClick={() => handleOptionClick(index)}
-                            className={`p-4 rounded-lg shadow text-white transition ${
-                                selectedOption === index
-                                    ? isCorrect
-                                        ? "bg-green-500"
-                                        : "bg-red-500"
-                                    : "bg-blue-500 hover:bg-blue-600"
-                            }`}
-                        >
-                            {option}
-                        </button>
-                    ))}
+                    {currentQuestion.options.map((option, index) => {
+                        // Determina el color del botón según la respuesta
+                        let bgColor = "bg-blue-500 hover:bg-blue-600";
+                        if (hasAnswered) {
+                            if (index === currentQuestion.answer) {
+                                bgColor = "bg-green-500";
+                            } else if (index === selectedOption) {
+                                bgColor = "bg-red-500";
+                            } else {
+                                bgColor = "bg-gray-300";
+                            }
+                        }
+                        return (
+                            <button
+                                key={index}
+                                onClick={() => handleOptionClick(index)}
+                                disabled={hasAnswered}
+                                className={`p-4 rounded-lg shadow text-white transition ${bgColor}`}
+                            >
+                                {option}
+                            </button>
+                        );
+                    })}
                 </div>
+
+                {/* Feedback de la respuesta */}
+                {hasAnswered && (
+                    <p className="mt-4 text-lg font-semibold">
+                        {isCorrect ? "¡Respuesta correcta!" : "Respuesta incorrecta"}
+                    </p>
+                )}
             </main>
 
             {/* Footer */}
@@ -75,9 +104,9 @@ const Quiz: React.FC = () => {
                 </p>
                 <button
                     onClick={handleNext}
-                    disabled={selectedOption === null}
+                    disabled={!hasAnswered}
                     className={`${
-                        selectedOption !== null
+                        hasAnswered
                             ? "bg-blue-500 hover:bg-blue-600"
                             : "bg-gray-300 cursor-not-allowed"
                     } text-white px-4 py-2 rounded-lg transition`}
