@@ -1,0 +1,45 @@
+import React from 'react';
+
+interface OptionsProps {
+  options: string[];
+  selectedOption: number | null;
+  correctAnswer: number;
+  hasAnswered: boolean;
+  handleOptionClick: (index: number) => void;
+}
+
+const Options: React.FC<OptionsProps> = ({
+  options,
+  selectedOption,
+  correctAnswer,
+  hasAnswered,
+  handleOptionClick,
+}) => (
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl">
+    {options.map((option, index) => {
+      // Determina el color del botón según la respuesta
+      let bgColor = "bg-blue-500 hover:bg-blue-600";
+      if (hasAnswered) {
+        if (index === correctAnswer) {
+          bgColor = "bg-green-500";
+        } else if (index === selectedOption) {
+          bgColor = "bg-red-500";
+        } else {
+          bgColor = "bg-gray-300";
+        }
+      }
+      return (
+        <button
+          key={index}
+          onClick={() => handleOptionClick(index)}
+          disabled={hasAnswered}
+          className={`p-4 rounded-lg shadow text-white transition ${bgColor}`}
+        >
+          {option}
+        </button>
+      );
+    })}
+  </div>
+);
+
+export default Options;
