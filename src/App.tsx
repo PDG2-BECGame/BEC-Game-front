@@ -6,6 +6,7 @@ import Classification from './pages/Classification';  // Nueva ruta de Clasifica
 import Login from './pages/Auth/Login';  // Ruta de Login
 import './App.css';
 import VideoTraining from './pages/VideoTraining'; // Importa VideoTraining
+import Quiz from './pages/Quiz'; // Importa la página del Quiz
 
 function App() {
     return (
@@ -41,6 +42,16 @@ function App() {
                     element={
                         <Layout>
                             <VideoTraining />
+                        </Layout>
+                    }
+                />
+
+                {/* Ruta dinámica para el quiz */}
+                <Route
+                    path="/quiz/:level"
+                    element={
+                        <Layout>
+                            <Quiz />
                         </Layout>
                     }
                 />
