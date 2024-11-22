@@ -1,0 +1,85 @@
+.gitignore
+eslint.config.js
+index.html
+package.json
+package-lock.json
+postcss.config.js
+README.md
+tailwind.config.js
+tsconfig.app.json
+tsconfig.json
+tsconfig.node.json
+vite.config.ts
+public
+│   BePRO_logo.svg
+│   manifest.json
+│   robots.txt
+src
+│   App.css
+│   App.tsx
+│   index.css
+│   main.tsx
+│   vite-env.d.ts
+│
+├───assets
+│       Ayuda.svg
+│       BePRO_logo.svg
+│       Correo.png
+│       icon-game.svg
+│       icon-problem.svg
+│       icon-solution.svg
+│       Inicio.svg
+│       Perfil.svg
+│       ProfileExample.png
+│       tabla_clasificacion.svg
+│
+├───components
+│   │   Button.tsx
+│   │   ScrollToTop.tsx
+│   │
+│   ├───Home
+│   │   ├───Roadmap
+│   │   │       Level.tsx
+│   │   │       Roadmap.tsx
+│   │   │
+│   │   └───Welcome
+│   │           WelcomeSection.tsx
+│   │
+│   ├───Quiz
+│   │       Feedback.tsx
+│   │       Footer.tsx
+│   │       HeaderQuiz.tsx
+│   │       Options.tsx
+│   │       QuestionCard.tsx
+│   │
+│   ├───Sidebar
+│   │       Layout.tsx
+│   │       Sidebar.tsx
+│   │
+│   ├───Videos
+│   │       VideoPlayer.tsx
+│   │
+│   └───VideoTraining
+│           DescriptionSection.tsx
+│           HeaderSection.tsx
+│           TitleSection.tsx
+│
+├───consts
+│       classificationData.ts
+│       levels.ts
+│       profile.ts
+│       questions.ts
+│       video.ts
+│
+├───pages
+│   │   Classification.tsx
+│   │   Home.tsx
+│   │   Profile.tsx
+│   │   Quiz.tsx
+│   │   VideoTraining.tsx
+│   │
+│   └───Auth
+│           Login.tsx
+│
+└───routes
+        AppRoutes.tsx
