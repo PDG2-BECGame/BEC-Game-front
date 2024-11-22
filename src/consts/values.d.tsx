@@ -1,7 +1,7 @@
 // Importamos los logos
 import logo1 from '../assets/icon-problem.svg';
 import logo2 from '../assets/icon-solution.svg';
-import logo3 from '../assets/logo-game.svg';
+import logo3 from '../assets/icon-game.svg';
 
 export const levels = [
     {
