@@ -6,10 +6,12 @@ import Classification from './pages/Classification';
 import Login from './pages/Auth/Login';
 import VideoTraining from './pages/VideoTraining';
 import Quiz from './pages/Quiz';
+import ScrollToTop from './components/ScrollToTop'; // Importamos ScrollToTop
 
 function App() {
     return (
         <Router>
+            <ScrollToTop /> {/* Añadimos el componente aquí */}
             <Routes>
                 {/* Rutas que usan el Layout */}
                 <Route
