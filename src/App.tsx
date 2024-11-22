@@ -1,12 +1,11 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Layout from './components/Sidebar/Layout'; // Importamos el componente Layout
-import Home from './pages/Home';  // Ruta de Home
-import Profile from './pages/Profile';  // Nueva ruta de Perfil
-import Classification from './pages/Classification';  // Nueva ruta de Clasificación
-import Login from './pages/Auth/Login';  // Ruta de Login
-import './App.css';
-import VideoTraining from './pages/VideoTraining'; // Importa VideoTraining
-import Quiz from './pages/Quiz'; // Importa la página del Quiz
+import Layout from './components/Sidebar/Layout';
+import Home from './pages/Home';
+import Profile from './pages/Profile';
+import Classification from './pages/Classification';
+import Login from './pages/Auth/Login';
+import VideoTraining from './pages/VideoTraining';
+import Quiz from './pages/Quiz';
 
 function App() {
     return (
@@ -37,15 +36,15 @@ function App() {
                         </Layout>
                     }
                 />
+                {/* Ruta dinámica para VideoTraining */}
                 <Route
-                    path="/videoTraining"
+                    path="/videoTraining/:level"
                     element={
                         <Layout>
                             <VideoTraining />
                         </Layout>
                     }
                 />
-
                 {/* Ruta dinámica para el quiz */}
                 <Route
                     path="/quiz/:level"
@@ -55,7 +54,6 @@ function App() {
                         </Layout>
                     }
                 />
-
                 {/* Rutas que no usan el Layout */}
                 <Route path="/login" element={<Login />} />
             </Routes>
