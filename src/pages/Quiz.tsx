@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { questionsByLevel } from "../consts/questions.d";
+import { questionsByLevel } from "../consts/questions";
 
 // Importa los componentes
 import HeaderQuiz from "../components/Quiz/HeaderQuiz";

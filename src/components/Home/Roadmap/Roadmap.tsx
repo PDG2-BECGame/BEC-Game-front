@@ -1,5 +1,5 @@
 import Level from "./Level";
-import { levels } from "../../../consts/values.d";
+import { levels } from "../../../consts/levels";
 
 export const Roadmap = () => {
     return (

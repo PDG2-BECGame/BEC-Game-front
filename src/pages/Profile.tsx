@@ -1,5 +1,5 @@
 import React from 'react';
-import { USER_DATA } from '../consts/profile.d';
+import { USER_DATA } from '../consts/profile';
 import avatar from '../assets/ProfileExample.png'; 
 
 const Profile: React.FC = () => {

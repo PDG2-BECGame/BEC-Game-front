@@ -6,7 +6,7 @@ import HeaderSection from "../components/VideoTraining/HeaderSection";
 import TitleSection from "../components/VideoTraining/TitleSection";
 import VideoPlayer from "../components/Videos/VideoPlayer";
 import DescriptionSection from "../components/VideoTraining/DescriptionSection";
-import { videoData } from "../consts/video.d";
+import { videoData } from "../consts/video";
 
 const VideoTraining: React.FC = () => {
     const { level } = useParams<{ level: string }>();
