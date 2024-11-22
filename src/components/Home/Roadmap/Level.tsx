@@ -1,14 +1,22 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom'; // Importamos useNavigate
 
 interface LevelProps {
+    id: number; // Agregamos id para identificar el nivel
     nivel: string;
     titulo: string;
     puntaje: number;
     descripcion: string;
-    logo: string; // Nueva propiedad para el logo
+    logo: string;
 }
 
-const Level: React.FC<LevelProps> = ({ nivel, titulo, puntaje, descripcion, logo }) => {
+const Level: React.FC<LevelProps> = ({ id, nivel, titulo, puntaje, descripcion, logo }) => {
+    const navigate = useNavigate(); // Hook para navegar
+
+    const handleContinue = () => {
+        navigate(`/videoTraining/${id}`); // Navegamos a la ruta del VideoTraining correspondiente
+    };
+
     return (
         <div
             className="flex flex-col p-6 border-2 rounded-xl shadow-md bg-white max-w-4xl w-full gap-4 font-poppins"
@@ -39,6 +47,7 @@ const Level: React.FC<LevelProps> = ({ nivel, titulo, puntaje, descripcion, logo
             <div className="flex justify-end mt-4">
                 <button
                     className="bg-[#592BBC] text-white px-6 py-2 rounded-md text-sm font-semibold hover:bg-[#360B9E] transition duration-200"
+                    onClick={handleContinue} // Añadimos el manejador de clic
                 >
                     Continuar
                 </button>
