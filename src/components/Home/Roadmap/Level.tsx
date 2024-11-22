@@ -1,15 +1,14 @@
 import React from 'react';
-import { FaShieldAlt } from "react-icons/fa"; // Ejemplo de ícono decorativo
 
 interface LevelProps {
-    nivel: string,
-    titulo: string,
-    puntaje: number,
-    descripcion: string
+    nivel: string;
+    titulo: string;
+    puntaje: number;
+    descripcion: string;
+    logo: string; // Nueva propiedad para el logo
 }
 
-
-const Level: React.FC<LevelProps> = ({ nivel, titulo, puntaje, descripcion }) => {
+const Level: React.FC<LevelProps> = ({ nivel, titulo, puntaje, descripcion, logo }) => {
     return (
         <div className="flex flex-col p-6 border-2 border-red-300 rounded-xl shadow-md bg-white max-w-4xl w-full gap-4 font-poppins">
             {/* Encabezado */}
@@ -25,7 +24,7 @@ const Level: React.FC<LevelProps> = ({ nivel, titulo, puntaje, descripcion }) =>
             <div className="flex flex-col md:flex-row items-start gap-6">
                 {/* Logo */}
                 <div className="flex justify-center items-center w-full md:w-1/4">
-                    <FaShieldAlt className="text-orange-500 text-9xl" />
+                    <img src={logo} alt={`Logo ${nivel}`} className="max-w-full h-auto" />
                 </div>
 
                 {/* Descripción */}
