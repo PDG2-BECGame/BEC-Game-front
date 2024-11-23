@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useState, ReactNode } from 'react';
 
 // Definimos la interfaz para el usuario
 interface User {
@@ -35,14 +35,10 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
   // Función para actualizar el puntaje del usuario
   const updateUserScore = (points: number) => {
-    setUser(prevUser => {
-      const updatedUser = {
-        ...prevUser,
-        totalScore: prevUser.totalScore + points,
-      };
-      console.log('Nuevo totalScore:', updatedUser.totalScore);
-      return updatedUser;
-    });
+    setUser(prevUser => ({
+      ...prevUser,
+      totalScore: prevUser.totalScore + points,
+    }));
   };
 
   // Función para reiniciar el puntaje del usuario

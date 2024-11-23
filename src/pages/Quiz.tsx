@@ -58,9 +58,6 @@ const Quiz: React.FC = () => {
     if (correct) {
       updateUserScore(250);
       setLevelScore((prevScore) => prevScore + 250);
-      console.log('Puntaje actualizado en el contexto');
-    } else {
-      console.log('Respuesta incorrecta, puntaje no actualizado');
     }
   };
 
