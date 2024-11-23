@@ -71,6 +71,9 @@ src
 │       questions.ts
 │       video.ts
 │
+├───context
+│       UserContext.tsx
+│
 ├───pages
 │   │   Classification.tsx
 │   │   Home.tsx
@@ -83,6 +86,3 @@ src
 │
 └───routes
         AppRoutes.tsx
-
------
-Agregar la carpeta src/context/ junto con el archivo UserContext.tsx
