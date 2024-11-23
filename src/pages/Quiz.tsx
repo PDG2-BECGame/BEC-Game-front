@@ -1,8 +1,9 @@
-// src/pages/Quiz.tsx
-
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { questionsByLevel } from "../consts/questions";
+
+// Importamos el UserContext
+import { UserContext } from "../context/UserContext";
 
 // Importa los componentes
 import HeaderQuiz from "../components/Quiz/HeaderQuiz";
@@ -20,12 +21,21 @@ const Quiz: React.FC = () => {
     return <p>No hay preguntas para este nivel.</p>;
   }
 
-  // Estados
+  // Accedemos al UserContext
+  const userContext = useContext(UserContext);
+
+  if (!userContext) {
+    return <p>Cargando...</p>;
+  }
+
+  const { updateUserScore } = userContext;
+
+  // Estados locales del componente
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [hasAnswered, setHasAnswered] = useState<boolean>(false);
-  const [score, setScore] = useState<number>(0);
+  const [levelScore, setLevelScore] = useState<number>(0); // Nuevo estado para el puntaje del nivel
 
   const currentQuestion = questions[currentQuestionIndex];
 
@@ -39,14 +49,18 @@ const Quiz: React.FC = () => {
 
   // Maneja la selección de una opción
   const handleOptionClick = (index: number) => {
-    if (hasAnswered) return; // Evita cambiar la respuesta después de seleccionar
+    if (hasAnswered) return;
     setSelectedOption(index);
     const correct = index === currentQuestion.answer;
     setIsCorrect(correct);
     setHasAnswered(true);
 
     if (correct) {
-      setScore((prevScore) => prevScore + 1); // Actualiza la puntuación
+      updateUserScore(250);
+      setLevelScore((prevScore) => prevScore + 250);
+      console.log('Puntaje actualizado en el contexto');
+    } else {
+      console.log('Respuesta incorrecta, puntaje no actualizado');
     }
   };
 
@@ -58,8 +72,8 @@ const Quiz: React.FC = () => {
       setIsCorrect(null);
       setHasAnswered(false);
     } else {
-      alert(`¡Has completado el nivel! Tu puntuación es ${score}/${questions.length}`);
-      // Redirecciona al usuario a la página de inicio
+      alert(`¡Has completado el nivel! Obtuviste ${levelScore} puntos.`);
+      // Redirecciona al usuario a la página de inicio o donde prefieras
       navigate("/");
     }
   };
@@ -69,8 +83,8 @@ const Quiz: React.FC = () => {
       {/* Header */}
       <HeaderQuiz
         currentLevel={currentLevel}
-        score={score}
         totalQuestions={questions.length}
+        levelScore={levelScore} // Pasamos levelScore al HeaderQuiz
         onExit={handleExit}
       />
 

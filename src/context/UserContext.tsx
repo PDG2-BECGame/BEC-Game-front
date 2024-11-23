@@ -35,10 +35,14 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
   // Función para actualizar el puntaje del usuario
   const updateUserScore = (points: number) => {
-    setUser(prevUser => ({
-      ...prevUser,
-      totalScore: prevUser.totalScore + points,
-    }));
+    setUser(prevUser => {
+      const updatedUser = {
+        ...prevUser,
+        totalScore: prevUser.totalScore + points,
+      };
+      console.log('Nuevo totalScore:', updatedUser.totalScore);
+      return updatedUser;
+    });
   };
 
   // Función para reiniciar el puntaje del usuario
