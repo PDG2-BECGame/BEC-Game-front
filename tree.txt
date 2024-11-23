@@ -83,3 +83,6 @@ src
 │
 └───routes
         AppRoutes.tsx
+
+-----
+Agregar la carpeta src/context/ junto con el archivo UserContext.tsx
