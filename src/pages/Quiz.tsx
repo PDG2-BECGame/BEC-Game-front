@@ -28,14 +28,15 @@ const Quiz: React.FC = () => {
     return <p>Cargando...</p>;
   }
 
-  const { updateUserScore } = userContext;
+  // Extraemos updateLevelScore del contexto
+  const { updateLevelScore } = userContext;
 
   // Estados locales del componente
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [hasAnswered, setHasAnswered] = useState<boolean>(false);
-  const [levelScore, setLevelScore] = useState<number>(0); // Nuevo estado para el puntaje del nivel
+  const [levelScore, setLevelScore] = useState<number>(0); // Estado para el puntaje del nivel
 
   const currentQuestion = questions[currentQuestionIndex];
 
@@ -56,8 +57,9 @@ const Quiz: React.FC = () => {
     setHasAnswered(true);
 
     if (correct) {
-      updateUserScore(250);
-      setLevelScore((prevScore) => prevScore + 250);
+      // Ya no actualizamos el totalScore directamente aquí
+      // Eliminamos updateUserScore(250);
+      setLevelScore((prevScore) => prevScore + 250); // Acumulamos el puntaje localmente
     }
   };
 
@@ -69,6 +71,9 @@ const Quiz: React.FC = () => {
       setIsCorrect(null);
       setHasAnswered(false);
     } else {
+      // Actualizamos el puntaje del nivel en el contexto
+      updateLevelScore(currentLevel, levelScore);
+
       alert(`¡Has completado el nivel! Obtuviste ${levelScore} puntos.`);
       // Redirecciona al usuario a la página de inicio o donde prefieras
       navigate("/");

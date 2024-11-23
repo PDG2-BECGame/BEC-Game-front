@@ -1,17 +1,28 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom'; // Importamos useNavigate
+import { UserContext } from '../../../context/UserContext'; // Importamos el UserContext
 
 interface LevelProps {
-    id: number; // Agregamos id para identificar el nivel
+    id: number; // Identificador único del nivel
     nivel: string;
     titulo: string;
-    puntaje: number;
     descripcion: string;
     logo: string;
 }
 
-const Level: React.FC<LevelProps> = ({ id, nivel, titulo, puntaje, descripcion, logo }) => {
+const Level: React.FC<LevelProps> = ({ id, nivel, titulo, descripcion, logo }) => {
     const navigate = useNavigate(); // Hook para navegar
+
+    // Accedemos al UserContext
+    const userContext = useContext(UserContext);
+
+    if (!userContext) {
+        return null; // Si el contexto no está disponible, retornamos null
+    }
+
+    const { user } = userContext;
+    const levelScore = user.levelScores[id] || 0; // Obtenemos el puntaje del nivel actual
+    const isCompleted = levelScore >= 500; // Determinamos si el nivel está completado
 
     const handleContinue = () => {
         navigate(`/videoTraining/${id}`); // Navegamos a la ruta del VideoTraining correspondiente
@@ -26,7 +37,12 @@ const Level: React.FC<LevelProps> = ({ id, nivel, titulo, puntaje, descripcion, 
             <div className="flex flex-col">
                 <h3 className="text-xl font-bold text-black mb-1">{nivel}</h3>
                 <p className="text-sm text-black mb-1">{titulo}</p>
-                <p className="text-sm font-bold text-purple-700 mb-4">Puntos: {puntaje}/500</p>
+                <p className="text-sm font-bold text-purple-700 mb-4">
+                    Puntos: {levelScore} / 500
+                </p>
+                {isCompleted && (
+                    <span className="text-green-600 font-bold">Completado</span>
+                )}
             </div>
 
             {/* Contenido principal */}
@@ -47,9 +63,9 @@ const Level: React.FC<LevelProps> = ({ id, nivel, titulo, puntaje, descripcion, 
             <div className="flex justify-end mt-4">
                 <button
                     className="bg-[#592BBC] text-white px-6 py-2 rounded-md text-sm font-semibold hover:bg-[#360B9E] transition duration-200"
-                    onClick={handleContinue} // Añadimos el manejador de clic
+                    onClick={handleContinue}
                 >
-                    Continuar
+                    {isCompleted ? 'Repetir Nivel' : 'Continuar'}
                 </button>
             </div>
         </div>

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { UserContext } from '../context/UserContext';
-import avatar from '../assets/ProfileExample.png'; 
+import avatar from '../assets/ProfileExample.png';
 
 const Profile: React.FC = () => {
   const userContext = useContext(UserContext);
@@ -25,17 +25,35 @@ const Profile: React.FC = () => {
         </div>
       </div>
       <div className="space-y-4">
+        {/* Información del correo electrónico */}
         <div className="flex justify-between items-center p-4 bg-white rounded-lg shadow-sm">
           <h2 className="text-sm font-semibold text-gray-600">Correo Electrónico:</h2>
           <p className="text-gray-700">{user.email}</p>
         </div>
+        {/* Información de la organización */}
         <div className="flex justify-between items-center p-4 bg-white rounded-lg shadow-sm">
           <h2 className="text-sm font-semibold text-gray-600">Organización:</h2>
           <p className="text-gray-700">{user.organization}</p>
         </div>
+        {/* Puntaje total del usuario */}
         <div className="flex justify-between items-center p-4 bg-white rounded-lg shadow-sm">
           <h2 className="text-sm font-semibold text-gray-600">Puntaje Total:</h2>
           <p className="text-gray-700">{user.totalScore}</p>
+        </div>
+        {/* Nueva sección: Puntajes por nivel */}
+        <div className="p-4 bg-white rounded-lg shadow-sm">
+          <h2 className="text-sm font-semibold text-gray-600 mb-2">Puntajes por Nivel:</h2>
+          {Object.keys(user.levelScores).length > 0 ? (
+            <ul className="list-disc list-inside text-gray-700">
+              {Object.entries(user.levelScores).map(([level, score]) => (
+                <li key={level}>
+                  Nivel {level}: {score} / 500
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-700">Aún no has completado ningún nivel.</p>
+          )}
         </div>
       </div>
     </div>
