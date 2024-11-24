@@ -1,5 +1,3 @@
-// src/consts/questions.d.ts
-
 export interface Question {
   id: number;
   question: string;

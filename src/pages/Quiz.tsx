@@ -64,7 +64,6 @@ const Quiz: React.FC = () => {
     }
 
     // Almacenar el feedback de la pregunta actual
-    // Si 'feedback' es opcional, proporcionamos un valor por defecto
     setCurrentFeedback(
       currentQuestion.feedback ??
         (correct ? "¡Respuesta correcta!" : "Respuesta incorrecta")
@@ -100,29 +99,34 @@ const Quiz: React.FC = () => {
       />
 
       {/* Contenido principal */}
-      <main className="flex-grow p-6 flex flex-col items-center justify-center pb-24">
-        {/* Pregunta */}
-        <QuestionCard
-          questionText={currentQuestion.question}
-          image={currentQuestion.image} // Pasamos la imagen si existe
-        />
-
-        {/* Opciones */}
-        <Options
-          options={currentQuestion.options}
-          selectedOption={selectedOption}
-          correctAnswer={currentQuestion.answer}
-          hasAnswered={hasAnswered}
-          handleOptionClick={handleOptionClick}
-        />
-
-        {/* Feedback de la respuesta */}
+      <main className="flex-grow p-6 flex flex-row items-start justify-center pb-24">
+        {/* Columna de Feedback */}
         {hasAnswered && (
-          <Feedback
-            isCorrect={isCorrect}
-            feedbackMessage={currentFeedback}
-          />
+          <div className="w-1/4 mr-4">
+            <Feedback
+              isCorrect={isCorrect}
+              feedbackMessage={currentFeedback}
+            />
+          </div>
         )}
+
+        {/* Columna de Pregunta y Opciones */}
+        <div className={`flex flex-col items-center ${hasAnswered ? 'w-3/4' : 'w-full'}`}>
+          {/* Pregunta */}
+          <QuestionCard
+            questionText={currentQuestion.question}
+            image={currentQuestion.image} // Pasamos la imagen si existe
+          />
+
+          {/* Opciones */}
+          <Options
+            options={currentQuestion.options}
+            selectedOption={selectedOption}
+            correctAnswer={currentQuestion.answer}
+            hasAnswered={hasAnswered}
+            handleOptionClick={handleOptionClick}
+          />
+        </div>
       </main>
 
       {/* Footer */}
