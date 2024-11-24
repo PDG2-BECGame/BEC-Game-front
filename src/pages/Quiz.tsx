@@ -1,3 +1,5 @@
+// src/pages/Quiz.tsx
+
 import React, { useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { questionsByLevel, Question } from "../consts/questions";
@@ -11,6 +13,7 @@ import QuestionCard from "../components/Quiz/QuestionCard";
 import Options from "../components/Quiz/Options";
 import Feedback from "../components/Quiz/Feedback";
 import Footer from "../components/Quiz/Footer";
+import QuizResults from "../components/Quiz/QuizResults"; // Importamos el nuevo componente
 
 const Quiz: React.FC = () => {
   const { level } = useParams<{ level: string }>();
@@ -41,14 +44,21 @@ const Quiz: React.FC = () => {
   // Estado para almacenar el feedback actual
   const [currentFeedback, setCurrentFeedback] = useState<string>("");
 
+  // Nuevo estado para controlar si el quiz ha finalizado
+  const [quizCompleted, setQuizCompleted] = useState<boolean>(false);
+
   const currentQuestion: Question = questions[currentQuestionIndex];
 
   // Función para manejar la salida del quiz
   const navigate = useNavigate();
 
   const handleExit = () => {
-    // Aquí puedes agregar lógica adicional, como confirmar la salida
     navigate("/"); // Redirecciona a la página de inicio
+  };
+
+  // Función para reiniciar o salir del quiz desde los resultados
+  const handleRestart = () => {
+    navigate("/"); // Redirecciona al inicio o a donde prefieras
   };
 
   // Maneja la selección de una opción
@@ -82,11 +92,33 @@ const Quiz: React.FC = () => {
       // Actualizamos el puntaje del nivel en el contexto
       updateLevelScore(currentLevel, levelScore);
 
-      // Aquí puedes redireccionar al usuario o mostrar una pantalla de resultados
-      alert(`¡Has completado el nivel! Obtuviste ${levelScore} puntos.`);
-      navigate("/"); // Redirecciona a la página de inicio
+      // Marcamos el quiz como completado
+      setQuizCompleted(true);
     }
   };
+
+  // Si el quiz ha finalizado, mostramos el componente de resultados
+  if (quizCompleted) {
+    return (
+      <div className="flex flex-col min-h-screen bg-gray-100">
+        {/* Header */}
+        <HeaderQuiz
+          currentLevel={currentLevel}
+          totalQuestions={questions.length}
+          levelScore={levelScore}
+          onExit={handleExit}
+        />
+        {/* Contenido principal */}
+        <main className="flex-grow p-6 flex flex-col items-center justify-center pb-24">
+          <QuizResults
+            levelScore={levelScore}
+            totalQuestions={questions.length}
+            onRestart={handleRestart}
+          />
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
@@ -94,7 +126,7 @@ const Quiz: React.FC = () => {
       <HeaderQuiz
         currentLevel={currentLevel}
         totalQuestions={questions.length}
-        levelScore={levelScore} // Pasamos levelScore al HeaderQuiz
+        levelScore={levelScore}
         onExit={handleExit}
       />
 
@@ -111,7 +143,11 @@ const Quiz: React.FC = () => {
         )}
 
         {/* Columna de Pregunta y Opciones */}
-        <div className={`flex flex-col items-center ${hasAnswered ? 'w-3/4' : 'w-full'}`}>
+        <div
+          className={`flex flex-col items-center ${
+            hasAnswered ? "w-3/4" : "w-full"
+          }`}
+        >
           {/* Pregunta */}
           <QuestionCard
             questionText={currentQuestion.question}
