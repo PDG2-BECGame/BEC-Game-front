@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { questionsByLevel } from "../consts/questions";
+import { questionsByLevel, Question } from "../consts/questions";
 
 // Importamos el UserContext
 import { UserContext } from "../context/UserContext";
@@ -38,7 +38,10 @@ const Quiz: React.FC = () => {
   const [hasAnswered, setHasAnswered] = useState<boolean>(false);
   const [levelScore, setLevelScore] = useState<number>(0); // Estado para el puntaje del nivel
 
-  const currentQuestion = questions[currentQuestionIndex];
+  // Estado para almacenar el feedback actual
+  const [currentFeedback, setCurrentFeedback] = useState<string>("");
+
+  const currentQuestion: Question = questions[currentQuestionIndex];
 
   // Función para manejar la salida del quiz
   const navigate = useNavigate();
@@ -57,10 +60,15 @@ const Quiz: React.FC = () => {
     setHasAnswered(true);
 
     if (correct) {
-      // Ya no actualizamos el totalScore directamente aquí
-      // Eliminamos updateUserScore(250);
       setLevelScore((prevScore) => prevScore + 250); // Acumulamos el puntaje localmente
     }
+
+    // Almacenar el feedback de la pregunta actual
+    // Si 'feedback' es opcional, proporcionamos un valor por defecto
+    setCurrentFeedback(
+      currentQuestion.feedback ??
+        (correct ? "¡Respuesta correcta!" : "Respuesta incorrecta")
+    );
   };
 
   // Maneja el paso a la siguiente pregunta
@@ -70,13 +78,14 @@ const Quiz: React.FC = () => {
       setSelectedOption(null);
       setIsCorrect(null);
       setHasAnswered(false);
+      setCurrentFeedback(""); // Reiniciamos el feedback
     } else {
       // Actualizamos el puntaje del nivel en el contexto
       updateLevelScore(currentLevel, levelScore);
 
+      // Aquí puedes redireccionar al usuario o mostrar una pantalla de resultados
       alert(`¡Has completado el nivel! Obtuviste ${levelScore} puntos.`);
-      // Redirecciona al usuario a la página de inicio o donde prefieras
-      navigate("/");
+      navigate("/"); // Redirecciona a la página de inicio
     }
   };
 
@@ -108,7 +117,12 @@ const Quiz: React.FC = () => {
         />
 
         {/* Feedback de la respuesta */}
-        <Feedback isCorrect={isCorrect} hasAnswered={hasAnswered} />
+        {hasAnswered && (
+          <Feedback
+            isCorrect={isCorrect}
+            feedbackMessage={currentFeedback}
+          />
+        )}
       </main>
 
       {/* Footer */}
