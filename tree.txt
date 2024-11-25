@@ -10,6 +10,10 @@ tsconfig.app.json
 tsconfig.json
 tsconfig.node.json
 vite.config.ts
+.babelrc
+fileMock.cjs
+jest.config.cjs
+jest.setup.js
 public
 │   BePRO_logo.svg
 │   manifest.json
@@ -51,10 +55,22 @@ src
 │   │       HeaderQuiz.tsx
 │   │       Options.tsx
 │   │       QuestionCard.tsx
+│   │       QuizResults.tsx
 │   │
 │   ├───Sidebar
 │   │       Layout.tsx
 │   │       Sidebar.tsx
+│   │
+│   ├───tests
+│   │       Feedback.test.tsx
+│   │       Footer.test.tsx
+│   │       Level.test.tsx
+│   │       Option.test.tsx
+│   │       QuestionCard.test.tsx
+│   │       ScrollToTop.test.tsx
+│   │       Sidebar.test.tsx
+│   │       VideoPlayer.test.tsx
+│   │       WelcomeSection.test.tsx
 │   │
 │   ├───Videos
 │   │       VideoPlayer.tsx
@@ -72,7 +88,11 @@ src
 │       video.ts
 │
 ├───context
+│       AuthContext.tsx
 │       UserContext.tsx
+│
+├───firebase
+│       firebaseConfig.ts
 │
 ├───pages
 │   │   Classification.tsx
@@ -83,6 +103,8 @@ src
 │   │
 │   └───Auth
 │           Login.tsx
+│           Register.tsx
 │
 └───routes
         AppRoutes.tsx
+        PrivateRoute.tsx
