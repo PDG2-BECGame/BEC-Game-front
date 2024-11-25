@@ -19,7 +19,6 @@ const Quiz: React.FC = () => {
 
   // Validación inicial para `level`
   if (!level) {
-    console.error("Error: level es undefined");
     return <p>Error: No se especificó el nivel. Verifica la URL.</p>;
   }
 

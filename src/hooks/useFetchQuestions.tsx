@@ -34,11 +34,8 @@ const useFetchQuestions = (level: string) => {
     };
 
     const fetchQuestions = async () => {
-      console.log(`Fetching questions for level ${level}...`); // Depuración
-
       const levelId = levelIdMap[level];
       if (!levelId) {
-        console.error(`No Firestore ID found for level ${level}`);
         setQuestions(defaultQuestions[parseInt(level, 10)] || []); // Fallback
         setIsLoading(false);
         return;
@@ -48,12 +45,9 @@ const useFetchQuestions = (level: string) => {
         const questionsCollection = collection(firestore, `levels/${levelId}/questions`);
         const snapshot = await getDocs(questionsCollection);
 
-        console.log(`Documents fetched for level ${level}:`, snapshot.size); // Depuración
-
         if (!snapshot.empty) {
           const fetchedQuestions: Question[] = snapshot.docs.map((doc) => {
             const data = doc.data();
-            console.log("Document data:", data); // Depuración
             return {
               id: data.id,
               question: data.question,
@@ -65,11 +59,9 @@ const useFetchQuestions = (level: string) => {
           });
           setQuestions(fetchedQuestions);
         } else {
-          console.warn(`No questions found for level ${level}. Using default.`);
           setQuestions(defaultQuestions[parseInt(level, 10)] || []); // Fallback
         }
       } catch (err) {
-        console.error("Error fetching questions from Firestore:", err);
         setError("Error loading questions.");
         setQuestions(defaultQuestions[parseInt(level, 10)] || []); // Fallback
       } finally {
