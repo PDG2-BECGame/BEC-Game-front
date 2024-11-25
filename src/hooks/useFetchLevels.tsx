@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore'; // Importamos query y orderBy
 import { firestore } from '../firebase/firebaseConfig';
 import { levels as defaultLevels } from '../consts/levels';
 
@@ -31,8 +31,10 @@ const useFetchLevels = () => {
 
     const fetchLevels = async () => {
       try {
+        // Creamos la consulta ordenada por 'id'
         const levelsCollection = collection(firestore, 'levels');
-        const snapshot = await getDocs(levelsCollection);
+        const levelsQuery = query(levelsCollection, orderBy('id')); // Ordenamos por 'id'
+        const snapshot = await getDocs(levelsQuery);
 
         if (!snapshot.empty) {
           const fetchedLevels: Level[] = snapshot.docs.map(doc => ({
@@ -41,7 +43,7 @@ const useFetchLevels = () => {
             titulo: doc.data().titulo,
             puntaje: doc.data().puntaje || 0,
             descripcion: doc.data().descripcion,
-            logo: logoMapping[doc.data().logo] 
+            logo: logoMapping[doc.data().logo] || iconProblem, // Asignamos un logo predeterminado si no hay mapeo
           }));
           setLevels(fetchedLevels);
         } else {
