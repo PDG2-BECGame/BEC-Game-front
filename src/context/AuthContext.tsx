@@ -35,8 +35,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setCurrentUser(user);
 
       if (user) {
-        console.log('Usuario autenticado:', user.uid);
-
         try {
           // Obtener el documento del usuario desde Firestore
           const userDocRef = doc(firestore, 'users', user.uid);
@@ -44,29 +42,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
           if (userDoc.exists()) {
             const userData = userDoc.data();
-            console.log('Datos del usuario desde Firestore:', userData);
 
             let organizationName: string | null = null;
 
             // Verificar si el usuario tiene un organitationId
             if (userData.organitationId) {
-              console.log('ID de organización encontrado:', userData.organitationId);
-
               try {
                 const orgDocRef = doc(firestore, 'organitations', userData.organitationId);
                 const orgDoc = await getDoc(orgDocRef);
 
                 if (orgDoc.exists()) {
                   organizationName = orgDoc.data()?.name || null;
-                  console.log('Organización encontrada:', organizationName);
-                } else {
-                  console.warn('No se encontró una organización para el ID:', userData.organitationId);
                 }
               } catch (orgError) {
                 console.error('Error al obtener la organización desde Firestore:', orgError);
               }
-            } else {
-              console.warn('El usuario no tiene un organitationId.');
             }
 
             // Calcular puntaje global dinámicamente
@@ -94,7 +84,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               levelScores,
             });
           } else {
-            console.warn('El usuario no tiene un documento en Firestore.');
             setUserData(null);
           }
         } catch (error) {
@@ -102,7 +91,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setUserData(null);
         }
       } else {
-        console.log('No hay un usuario autenticado.');
         setUserData(null);
       }
     });

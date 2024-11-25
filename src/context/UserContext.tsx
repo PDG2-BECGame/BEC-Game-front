@@ -50,22 +50,16 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   useEffect(() => {
     const loadUserData = async () => {
       if (userData) {
-        console.log('Datos completos del usuario:', userData);
-
         let organizationName = null;
 
         // Cambiado organizationId por organitationId
         if (userData.organitationId) {
           try {
-            console.log('Buscando organización con ID:', userData.organitationId);
             const orgRef = doc(firestore, 'organitations', userData.organitationId); // Usamos organitationId aquí
             const orgDoc = await getDoc(orgRef);
 
             if (orgDoc.exists()) {
               organizationName = orgDoc.data()?.name || null;
-              console.log('Organización encontrada:', organizationName);
-            } else {
-              console.log('No se encontró la organización con el ID:', userData.organitationId);
             }
           } catch (error) {
             console.error('Error al obtener la organización desde Firebase:', error);
