@@ -1,34 +1,34 @@
-// Login.tsx
+// src/pages/Auth/Register.tsx
 import React, { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../firebase/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
 
-const Login: React.FC = () => {
+const Register: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
   const [error, setError] = useState('');
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await createUserWithEmailAndPassword(auth, email, password);
       navigate('/');
-    } catch (err: any) {
-      setError(err.message);
-      console.error(err);
+    } catch (error: any) {
+      setError(error.message);
+      console.error(error);
     }
   };
 
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <form
-        onSubmit={handleLogin}
+        onSubmit={handleRegister}
         className="bg-white p-6 rounded shadow-md w-full max-w-sm"
       >
-        <h2 className="text-2xl mb-4">Iniciar Sesión</h2>
+        <h2 className="text-2xl mb-4">Registro</h2>
         {error && <p className="text-red-500">{error}</p>}
         <input
           type="email"
@@ -48,17 +48,11 @@ const Login: React.FC = () => {
           type="submit"
           className="w-full bg-blue-500 text-white p-2 rounded"
         >
-          Ingresar
+          Registrarse
         </button>
-        <p className="mt-4 text-center">
-          ¿No tienes una cuenta?{' '}
-          <a href="/register" className="text-blue-500">
-            Regístrate
-          </a>
-        </p>
       </form>
     </div>
   );
 };
 
-export default Login;
+export default Register;
