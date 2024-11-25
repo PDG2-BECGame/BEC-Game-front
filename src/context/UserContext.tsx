@@ -1,24 +1,31 @@
 import React, { createContext, useContext, ReactNode, useEffect, useState } from 'react';
-import { AuthContext } from './AuthContext'; // Importa el AuthContext
+import { AuthContext } from './AuthContext';
+import { firestore } from '../firebase/firebaseConfig';
+import { doc, getDoc } from 'firebase/firestore';
+
+interface LevelScore {
+  score: number;
+  maxScore: number;
+}
 
 interface LevelScores {
-  [level: number]: number;
+  [level: string]: LevelScore;
 }
 
 interface User {
   name: string;
   email: string;
-  organization: string;
+  organitationId: string | null; // Usamos organitationId
+  organizationName: string | null;
   totalScore: number;
   levelScores: LevelScores;
 }
 
 interface UserContextType {
   user: User | null;
-  isLoading: boolean; // Indicador de carga
-  updateLevelScore: (level: number, score: number) => void; // Función para actualizar puntaje por nivel
-  updateUserScore: (points: number) => void; // Función para actualizar puntaje total
-  resetUserScore: () => void; // Función para reiniciar puntajes
+  isLoading: boolean;
+  updateLevelScore: (level: string, score: number, maxScore: number) => void;
+  resetUserScore: () => void;
 }
 
 export const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -28,68 +35,108 @@ interface UserProviderProps {
 }
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-  const { currentUser, userData } = useContext(AuthContext)!; // Usa AuthContext para datos básicos
+  const { currentUser, userData } = useContext(AuthContext) as {
+    currentUser: any;
+    userData: {
+      name: string;
+      email: string;
+      organitationId?: string; // Cambiado a organitationId
+      levelStatus?: { [level: string]: { score: number; maxScore: number } };
+    } | null;
+  };
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true); // Indicador de carga
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Sincronizamos los datos del usuario al cambiar `userData` o `currentUser`
   useEffect(() => {
-    if (userData) {
-      setUser(userData); // Sincroniza los datos del usuario desde Firestore
-      setIsLoading(false);
-    } else if (currentUser) {
-      // Usuario autenticado pero sin datos en Firestore
-      setUser({
-        name: currentUser.displayName || 'Usuario',
-        email: currentUser.email || '',
-        organization: '',
-        totalScore: 0,
-        levelScores: {}, // Inicializamos como objeto vacío
-      });
-      setIsLoading(false);
-    } else {
-      setIsLoading(true); // Datos aún no disponibles
-      setUser(null);
-    }
+    const loadUserData = async () => {
+      if (userData) {
+        console.log('Datos completos del usuario:', userData);
+
+        let organizationName = null;
+
+        // Cambiado organizationId por organitationId
+        if (userData.organitationId) {
+          try {
+            console.log('Buscando organización con ID:', userData.organitationId);
+            const orgRef = doc(firestore, 'organitations', userData.organitationId); // Usamos organitationId aquí
+            const orgDoc = await getDoc(orgRef);
+
+            if (orgDoc.exists()) {
+              organizationName = orgDoc.data()?.name || null;
+              console.log('Organización encontrada:', organizationName);
+            } else {
+              console.log('No se encontró la organización con el ID:', userData.organitationId);
+            }
+          } catch (error) {
+            console.error('Error al obtener la organización desde Firebase:', error);
+          }
+        }
+
+        const levelStatus = userData.levelStatus || {};
+        let totalScore = 0;
+
+        const levelScores: LevelScores = Object.entries(levelStatus).reduce((acc, [level, data]: any) => {
+          const score = data?.score || 0;
+          const maxScore = data?.maxScore || 0;
+          totalScore += score;
+          acc[level] = { score, maxScore };
+          return acc;
+        }, {} as LevelScores);
+
+        setUser({
+          name: userData.name || 'Usuario',
+          email: userData.email || '',
+          organitationId: userData.organitationId || null, // Usamos organitationId aquí
+          organizationName: organizationName || 'Sin organización',
+          totalScore,
+          levelScores,
+        });
+        setIsLoading(false);
+      } else if (currentUser) {
+        setUser({
+          name: currentUser.displayName || 'Usuario',
+          email: currentUser.email || '',
+          organitationId: null,
+          organizationName: 'Sin organización',
+          totalScore: 0,
+          levelScores: {},
+        });
+        setIsLoading(false);
+      } else {
+        setIsLoading(true);
+        setUser(null);
+      }
+    };
+
+    loadUserData();
   }, [userData, currentUser]);
 
-  // Actualiza el puntaje de un nivel específico
-  const updateLevelScore = (level: number, score: number) => {
+  const updateLevelScore = (level: string, score: number, maxScore: number) => {
     setUser((prevUser) => {
-      if (!prevUser) return prevUser; // Si no hay usuario, no hacemos nada
+      if (!prevUser) return prevUser;
 
-      const previousScore = prevUser.levelScores[level] || 0;
-      const newScore = Math.max(score, previousScore); // Solo actualiza si el puntaje es mayor
+      const previousScore = prevUser.levelScores[level]?.score || 0;
+      const newScore = Math.max(score, previousScore);
+
       return {
         ...prevUser,
         totalScore: prevUser.totalScore + (newScore - previousScore),
         levelScores: {
           ...prevUser.levelScores,
-          [level]: newScore,
+          [level]: { score: newScore, maxScore },
         },
       };
     });
   };
 
-  // Actualiza el puntaje total del usuario
-  const updateUserScore = (points: number) => {
-    setUser((prevUser) => {
-      if (!prevUser) return prevUser; // Si no hay usuario, no hacemos nada
-      return {
-        ...prevUser,
-        totalScore: prevUser.totalScore + points,
-      };
-    });
-  };
-
-  // Reinicia los puntajes del usuario
   const resetUserScore = () => {
     setUser((prevUser) => {
-      if (!prevUser) return prevUser; // Si no hay usuario, no hacemos nada
+      if (!prevUser) return prevUser;
+
       return {
         ...prevUser,
         totalScore: 0,
-        levelScores: {}, // Reiniciamos los puntajes por nivel
+        levelScores: {},
       };
     });
   };
@@ -100,7 +147,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         user,
         isLoading,
         updateLevelScore,
-        updateUserScore,
         resetUserScore,
       }}
     >
