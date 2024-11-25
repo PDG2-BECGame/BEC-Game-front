@@ -1,11 +1,9 @@
-// src/pages/Quiz.tsx
-
 import React, { useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { questionsByLevel, Question } from "../consts/questions";
-
-// Importamos el UserContext
 import { UserContext } from "../context/UserContext";
+
+// Importamos el hook para cargar las preguntas
+import useFetchQuestions from "../hooks/useFetchQuestions";
 
 // Importa los componentes
 import HeaderQuiz from "../components/Quiz/HeaderQuiz";
@@ -13,55 +11,55 @@ import QuestionCard from "../components/Quiz/QuestionCard";
 import Options from "../components/Quiz/Options";
 import Feedback from "../components/Quiz/Feedback";
 import Footer from "../components/Quiz/Footer";
-import QuizResults from "../components/Quiz/QuizResults"; // Importamos el nuevo componente
+import QuizResults from "../components/Quiz/QuizResults";
 
 const Quiz: React.FC = () => {
+  // Extrae `level` de los parámetros de la URL
   const { level } = useParams<{ level: string }>();
-  const currentLevel = parseInt(level || "1", 10);
-  const questions = questionsByLevel[currentLevel];
 
-  if (!questions) {
-    return <p>No hay preguntas para este nivel.</p>;
+  // Validación inicial para `level`
+  if (!level) {
+    console.error("Error: level es undefined");
+    return <p>Error: No se especificó el nivel. Verifica la URL.</p>;
   }
 
-  // Accedemos al UserContext
+  // Usa el hook para cargar las preguntas
+  const { questions, isLoading, error } = useFetchQuestions(level);
+
+  // Accede al UserContext
   const userContext = useContext(UserContext);
 
   if (!userContext) {
-    return <p>Cargando...</p>;
+    return <p>Error: No se encontró el contexto de usuario.</p>;
   }
 
-  // Extraemos updateLevelScore del contexto
+  // Extrae propiedades y métodos del contexto
   const { updateLevelScore } = userContext;
 
-  // Estados locales del componente
+  // Manejo de estados locales
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [hasAnswered, setHasAnswered] = useState<boolean>(false);
-  const [levelScore, setLevelScore] = useState<number>(0); // Estado para el puntaje del nivel
-
-  // Estado para almacenar el feedback actual
+  const [levelScore, setLevelScore] = useState<number>(0);
   const [currentFeedback, setCurrentFeedback] = useState<string>("");
-
-  // Nuevo estado para controlar si el quiz ha finalizado
   const [quizCompleted, setQuizCompleted] = useState<boolean>(false);
 
-  const currentQuestion: Question = questions[currentQuestionIndex];
-
-  // Función para manejar la salida del quiz
   const navigate = useNavigate();
 
-  const handleExit = () => {
-    navigate("/"); // Redirecciona a la página de inicio
-  };
+  // Manejo de carga y errores
+  if (isLoading) {
+    return <p>Cargando preguntas...</p>;
+  }
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
+  if (!questions || questions.length === 0) {
+    return <p>No hay preguntas disponibles para este nivel.</p>;
+  }
 
-  // Función para reiniciar o salir del quiz desde los resultados
-  const handleRestart = () => {
-    navigate("/"); // Redirecciona al inicio o a donde prefieras
-  };
+  const currentQuestion = questions[currentQuestionIndex];
 
-  // Maneja la selección de una opción
   const handleOptionClick = (index: number) => {
     if (hasAnswered) return;
     setSelectedOption(index);
@@ -70,45 +68,39 @@ const Quiz: React.FC = () => {
     setHasAnswered(true);
 
     if (correct) {
-      setLevelScore((prevScore) => prevScore + 250); // Acumulamos el puntaje localmente
+      setLevelScore((prevScore) => prevScore + 250);
     }
 
-    // Almacenar el feedback de la pregunta actual
     setCurrentFeedback(
-      currentQuestion.feedback ??
-        (correct ? "¡Respuesta correcta!" : "Respuesta incorrecta")
+      currentQuestion.feedback ?? (correct ? "¡Respuesta correcta!" : "Respuesta incorrecta")
     );
   };
 
-  // Maneja el paso a la siguiente pregunta
   const handleNext = () => {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
       setSelectedOption(null);
       setIsCorrect(null);
       setHasAnswered(false);
-      setCurrentFeedback(""); // Reiniciamos el feedback
+      setCurrentFeedback("");
     } else {
-      // Actualizamos el puntaje del nivel en el contexto
-      updateLevelScore(currentLevel, levelScore);
-
-      // Marcamos el quiz como completado
+      updateLevelScore(parseInt(level, 10), levelScore); // Convierte `level` a número
       setQuizCompleted(true);
     }
   };
 
-  // Si el quiz ha finalizado, mostramos el componente de resultados
+  const handleExit = () => navigate("/");
+  const handleRestart = () => navigate("/");
+
   if (quizCompleted) {
     return (
       <div className="flex flex-col min-h-screen bg-gray-100">
-        {/* Header */}
         <HeaderQuiz
-          currentLevel={currentLevel}
+          currentLevel={level}
           totalQuestions={questions.length}
           levelScore={levelScore}
           onExit={handleExit}
         />
-        {/* Contenido principal */}
         <main className="flex-grow p-6 flex flex-col items-center justify-center pb-24">
           <QuizResults
             levelScore={levelScore}
@@ -122,39 +114,20 @@ const Quiz: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
-      {/* Header */}
       <HeaderQuiz
-        currentLevel={currentLevel}
+        currentLevel={level}
         totalQuestions={questions.length}
         levelScore={levelScore}
         onExit={handleExit}
       />
-
-      {/* Contenido principal */}
       <main className="flex-grow p-6 flex flex-row items-start justify-center pb-24">
-        {/* Columna de Feedback */}
         {hasAnswered && (
           <div className="w-1/4 mr-4">
-            <Feedback
-              isCorrect={isCorrect}
-              feedbackMessage={currentFeedback}
-            />
+            <Feedback isCorrect={isCorrect} feedbackMessage={currentFeedback} />
           </div>
         )}
-
-        {/* Columna de Pregunta y Opciones */}
-        <div
-          className={`flex flex-col items-center ${
-            hasAnswered ? "w-3/4" : "w-full"
-          }`}
-        >
-          {/* Pregunta */}
-          <QuestionCard
-            questionText={currentQuestion.question}
-            image={currentQuestion.image} // Pasamos la imagen si existe
-          />
-
-          {/* Opciones */}
+        <div className={`flex flex-col items-center ${hasAnswered ? "w-3/4" : "w-full"}`}>
+          <QuestionCard questionText={currentQuestion.question} image={currentQuestion.image} />
           <Options
             options={currentQuestion.options}
             selectedOption={selectedOption}
@@ -164,8 +137,6 @@ const Quiz: React.FC = () => {
           />
         </div>
       </main>
-
-      {/* Footer */}
       <Footer
         currentQuestionIndex={currentQuestionIndex}
         totalQuestions={questions.length}
