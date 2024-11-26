@@ -84,6 +84,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               levelScores,
             });
           } else {
+            console.warn(`No se encontró el documento del usuario con UID: ${user.uid}`);
             setUserData(null);
           }
         } catch (error) {

@@ -15,7 +15,7 @@ interface LevelScores {
 interface User {
   name: string;
   email: string;
-  organitationId: string | null; // Usamos organitationId
+  organitationId: string | null; 
   organizationName: string | null;
   totalScore: number;
   levelScores: LevelScores;
@@ -52,10 +52,10 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       if (userData) {
         let organizationName = null;
 
-        // Cambiado organizationId por organitationId
+        // Verificar si el usuario tiene un organitationId
         if (userData.organitationId) {
           try {
-            const orgRef = doc(firestore, 'organitations', userData.organitationId); // Usamos organitationId aquí
+            const orgRef = doc(firestore, 'organitations', userData.organitationId);
             const orgDoc = await getDoc(orgRef);
 
             if (orgDoc.exists()) {
@@ -69,6 +69,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         const levelStatus = userData.levelStatus || {};
         let totalScore = 0;
 
+        // Calcular los puntajes por nivel y el puntaje total
         const levelScores: LevelScores = Object.entries(levelStatus).reduce((acc, [level, data]: any) => {
           const score = data?.score || 0;
           const maxScore = data?.maxScore || 0;
@@ -80,13 +81,14 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         setUser({
           name: userData.name || 'Usuario',
           email: userData.email || '',
-          organitationId: userData.organitationId || null, // Usamos organitationId aquí
+          organitationId: userData.organitationId || null,
           organizationName: organizationName || 'Sin organización',
           totalScore,
           levelScores,
         });
         setIsLoading(false);
       } else if (currentUser) {
+        // Si el usuario está autenticado pero no tiene datos adicionales en Firestore
         setUser({
           name: currentUser.displayName || 'Usuario',
           email: currentUser.email || '',
@@ -105,6 +107,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     loadUserData();
   }, [userData, currentUser]);
 
+  // Actualiza el puntaje de un nivel específico
   const updateLevelScore = (level: string, score: number, maxScore: number) => {
     setUser((prevUser) => {
       if (!prevUser) return prevUser;
@@ -123,6 +126,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     });
   };
 
+  // Reinicia los puntajes del usuario
   const resetUserScore = () => {
     setUser((prevUser) => {
       if (!prevUser) return prevUser;

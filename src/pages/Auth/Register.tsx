@@ -18,12 +18,16 @@ const Register: React.FC = () => {
   // Cargar las organizaciones existentes desde Firebase
   useEffect(() => {
     const fetchOrganizations = async () => {
-      const orgsSnapshot = await getDocs(collection(firestore, 'organitations'));
-      const orgs = orgsSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setOrganizations(orgs);
+      try {
+        const orgsSnapshot = await getDocs(collection(firestore, 'organitations'));
+        const orgs = orgsSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setOrganizations(orgs);
+      } catch (err) {
+        console.error('Error al cargar organizaciones:', err);
+      }
     };
     fetchOrganizations();
   }, []);
@@ -50,25 +54,27 @@ const Register: React.FC = () => {
         selectedOrganizationId = orgRef.id;
       }
 
+      // Estructura inicial de levelStatus
+      const initialLevelStatus = {
+        level1: { score: 0, maxScore: 500 },
+        level2: { score: 0, maxScore: 500 },
+        level3: { score: 0, maxScore: 250 },
+      };
+
       // Crear documento para el usuario en Firestore
       const userDoc = {
         id: user.uid,
         name,
         email,
         organitationId: selectedOrganizationId || '',
-        levelStatus: {
-          global: 0,
-          level1: 0,
-          level2: 0,
-          level3: 0,
-        },
+        levelStatus: initialLevelStatus,
       };
       await setDoc(doc(firestore, 'users', user.uid), userDoc);
 
       navigate('/');
     } catch (err: any) {
       setError(err.message);
-      console.error(err);
+      console.error('Error durante el registro:', err);
     }
   };
 

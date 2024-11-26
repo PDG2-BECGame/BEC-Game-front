@@ -35,8 +35,21 @@ export const createUserDocument = async (uid: string, data: Record<string, any>)
   }
 
   try {
+    // Inicialización de levelStatus con valores predeterminados si no existe
+    const initialLevelStatus = {
+      level1: { score: 0, maxScore: 500 },
+      level2: { score: 0, maxScore: 500 },
+      level3: { score: 0, maxScore: 250 },
+    };
+
+    // Fusión de datos iniciales con datos personalizados
+    const userData = {
+      ...data,
+      levelStatus: data.levelStatus || initialLevelStatus, // Preserva levelStatus si ya existe
+    };
+
     const userRef = doc(firestore, 'users', uid);
-    await setDoc(userRef, data, { merge: true }); // Merge para evitar sobrescribir datos existentes
+    await setDoc(userRef, userData, { merge: true }); // Merge para evitar sobrescribir datos existentes
     console.log(`Documento creado o actualizado para el usuario con UID: ${uid}`);
   } catch (error) {
     console.error('Error al crear o actualizar el documento del usuario:', error);
