@@ -6,11 +6,9 @@ interface LevelProps {
   id: number;
   nivel: string;
   titulo: string;
-  puntaje: number; // Agregamos la propiedad puntaje
   descripcion: string;
   logo: string;
 }
-
 
 const Level: React.FC<LevelProps> = ({ id, nivel, titulo, descripcion, logo }) => {
   const navigate = useNavigate();
@@ -28,9 +26,16 @@ const Level: React.FC<LevelProps> = ({ id, nivel, titulo, descripcion, logo }) =
     return <div>Loading user data...</div>; // Muestra un estado de carga si el usuario no está cargado
   }
 
-  // Proporcionamos un valor predeterminado para levelScores
-  const levelScore = user.levelScores?.[id] || 0;
-  const isCompleted = levelScore >= 500;
+  // Generamos la clave dinámica para acceder al nivel (e.g., "level1", "level2")
+  const levelKey = `level${id}`;
+  const levelData = user.levelScores?.[levelKey] || { score: 0, maxScore: 0 };
+
+  // Extraemos el puntaje actual y el máximo puntaje
+  const score = levelData.score;
+  const maxScore = levelData.maxScore;
+
+  // Verificamos si el nivel está completo
+  const isCompleted = score >= maxScore;
 
   const handleContinue = () => {
     navigate(`/videoTraining/${id}`);
@@ -46,7 +51,7 @@ const Level: React.FC<LevelProps> = ({ id, nivel, titulo, descripcion, logo }) =
         <h3 className="text-xl font-bold text-black mb-1">{nivel}</h3>
         <p className="text-sm text-black mb-1">{titulo}</p>
         <p className="text-sm font-bold text-purple-700 mb-4">
-          Puntos: {levelScore} / 500
+          Puntos: {score} / {maxScore}
         </p>
         {isCompleted && (
           <span className="text-green-600 font-bold">Completado</span>

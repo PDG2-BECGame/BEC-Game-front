@@ -32,6 +32,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      console.log('Auth state changed:', user); // Log para verificar si el usuario está autenticado
       setCurrentUser(user);
 
       if (user) {
@@ -42,6 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
           if (userDoc.exists()) {
             const userData = userDoc.data();
+            console.log('User document data from Firestore:', userData); // Log de los datos crudos del usuario
 
             let organizationName: string | null = null;
 
@@ -53,6 +55,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
                 if (orgDoc.exists()) {
                   organizationName = orgDoc.data()?.name || null;
+                  console.log('Organization name:', organizationName); // Log para la organización
                 }
               } catch (orgError) {
                 console.error('Error al obtener la organización desde Firestore:', orgError);
@@ -61,6 +64,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
             // Calcular puntaje global dinámicamente
             const levelStatus = userData.levelStatus || {};
+            console.log('Level Status from Firestore:', levelStatus); // Log del estado de los niveles
+
             let totalScore = 0;
 
             const levelScores: LevelStatus = Object.entries(levelStatus).reduce(
@@ -73,6 +78,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               },
               {} as LevelStatus
             );
+
+            console.log('Mapped Level Scores:', levelScores); // Log de los puntajes mapeados
 
             // Actualizar los datos del usuario
             setUserData({
@@ -92,6 +99,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setUserData(null);
         }
       } else {
+        console.warn('No user authenticated.');
         setUserData(null);
       }
     });

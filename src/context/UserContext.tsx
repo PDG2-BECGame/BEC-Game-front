@@ -1,7 +1,5 @@
 import React, { createContext, useContext, ReactNode, useEffect, useState } from 'react';
 import { AuthContext } from './AuthContext';
-import { firestore } from '../firebase/firebaseConfig';
-import { doc, getDoc } from 'firebase/firestore';
 
 interface LevelScore {
   score: number;
@@ -15,7 +13,7 @@ interface LevelScores {
 interface User {
   name: string;
   email: string;
-  organitationId: string | null; 
+  organitationId: string | null;
   organizationName: string | null;
   totalScore: number;
   levelScores: LevelScores;
@@ -35,79 +33,35 @@ interface UserProviderProps {
 }
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-  const { currentUser, userData } = useContext(AuthContext) as {
-    currentUser: any;
-    userData: {
-      name: string;
-      email: string;
-      organitationId?: string; // Cambiado a organitationId
-      levelStatus?: { [level: string]: { score: number; maxScore: number } };
-    } | null;
+  const { userData } = useContext(AuthContext) as {
+    userData: User | null;
   };
+
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const loadUserData = async () => {
-      if (userData) {
-        let organizationName = null;
+    if (userData) {
+      console.log('UserData in UserContext:', userData);
 
-        // Verificar si el usuario tiene un organitationId
-        if (userData.organitationId) {
-          try {
-            const orgRef = doc(firestore, 'organitations', userData.organitationId);
-            const orgDoc = await getDoc(orgRef);
+      // Usar directamente userData.levelScores
+      setUser({
+        name: userData.name || 'Usuario',
+        email: userData.email || '',
+        organitationId: userData.organitationId || null,
+        organizationName: userData.organizationName || 'Sin organización',
+        totalScore: userData.totalScore || 0,
+        levelScores: userData.levelScores || {}, // Tomamos directamente los datos ya procesados
+      });
 
-            if (orgDoc.exists()) {
-              organizationName = orgDoc.data()?.name || null;
-            }
-          } catch (error) {
-            console.error('Error al obtener la organización desde Firebase:', error);
-          }
-        }
+      setIsLoading(false);
+    } else {
+      console.warn('No userData available in UserContext.');
+      setUser(null);
+      setIsLoading(false);
+    }
+  }, [userData]);
 
-        const levelStatus = userData.levelStatus || {};
-        let totalScore = 0;
-
-        // Calcular los puntajes por nivel y el puntaje total
-        const levelScores: LevelScores = Object.entries(levelStatus).reduce((acc, [level, data]: any) => {
-          const score = data?.score || 0;
-          const maxScore = data?.maxScore || 0;
-          totalScore += score;
-          acc[level] = { score, maxScore };
-          return acc;
-        }, {} as LevelScores);
-
-        setUser({
-          name: userData.name || 'Usuario',
-          email: userData.email || '',
-          organitationId: userData.organitationId || null,
-          organizationName: organizationName || 'Sin organización',
-          totalScore,
-          levelScores,
-        });
-        setIsLoading(false);
-      } else if (currentUser) {
-        // Si el usuario está autenticado pero no tiene datos adicionales en Firestore
-        setUser({
-          name: currentUser.displayName || 'Usuario',
-          email: currentUser.email || '',
-          organitationId: null,
-          organizationName: 'Sin organización',
-          totalScore: 0,
-          levelScores: {},
-        });
-        setIsLoading(false);
-      } else {
-        setIsLoading(true);
-        setUser(null);
-      }
-    };
-
-    loadUserData();
-  }, [userData, currentUser]);
-
-  // Actualiza el puntaje de un nivel específico
   const updateLevelScore = (level: string, score: number, maxScore: number) => {
     setUser((prevUser) => {
       if (!prevUser) return prevUser;
@@ -126,7 +80,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     });
   };
 
-  // Reinicia los puntajes del usuario
   const resetUserScore = () => {
     setUser((prevUser) => {
       if (!prevUser) return prevUser;
@@ -134,7 +87,10 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       return {
         ...prevUser,
         totalScore: 0,
-        levelScores: {},
+        levelScores: Object.keys(prevUser.levelScores).reduce((acc, key) => {
+          acc[key] = { score: 0, maxScore: prevUser.levelScores[key].maxScore };
+          return acc;
+        }, {} as LevelScores),
       };
     });
   };

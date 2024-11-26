@@ -22,7 +22,6 @@ export const Roadmap = () => {
               id={level.id}
               nivel={level.nivel}
               titulo={level.titulo}
-              puntaje={level.puntaje} // Puntaje agregado correctamente
               descripcion={level.descripcion}
               logo={level.logo}
             />
