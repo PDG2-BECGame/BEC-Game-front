@@ -1,9 +1,8 @@
 import React, { createContext, useContext, ReactNode, useEffect, useState } from 'react';
 import { AuthContext } from './AuthContext';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, getDoc } from 'firebase/firestore'; // Importamos getDoc
 import { firestore } from '../firebase/firebaseConfig';
 import { User as FirebaseUser } from 'firebase/auth';
-
 
 interface LevelScore {
   score: number;
@@ -92,31 +91,42 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     }
 
     try {
+      const userDocRef = doc(firestore, 'users', currentUser.uid);
+
+      // Obtener el puntaje actual desde Firestore
+      const userDocSnapshot = await getDoc(userDocRef);
+      const currentFirestoreScore = userDocSnapshot.get(`levelStatus.${level}.score`) || 0;
+
+      // Calcular el nuevo puntaje máximo
+      const newScore = Math.max(score, currentFirestoreScore);
+
+      // Actualizar en Firestore solo si el nuevo puntaje es mayor
+      if (newScore > currentFirestoreScore) {
+        await updateDoc(userDocRef, {
+          [`levelStatus.${level}.score`]: newScore,
+          [`levelStatus.${level}.maxScore`]: maxScore,
+        });
+        console.log(`Score updated in Firestore for level ${level}`);
+      } else {
+        console.log('New score is not higher than current score. No update performed.');
+      }
+
       // Actualizar el estado local
       setUser((prevUser) => {
         if (!prevUser) return prevUser;
 
         const previousScore = prevUser.levelScores[level]?.score || 0;
-        const newScore = Math.max(score, previousScore);
+        const finalScore = Math.max(score, previousScore);
 
         return {
           ...prevUser,
-          totalScore: prevUser.totalScore + (newScore - previousScore),
+          totalScore: prevUser.totalScore + (finalScore - previousScore),
           levelScores: {
             ...prevUser.levelScores,
-            [level]: { score: newScore, maxScore },
+            [level]: { score: finalScore, maxScore },
           },
         };
       });
-
-      // Actualizar en Firestore
-      const userDocRef = doc(firestore, 'users', currentUser.uid);
-      await updateDoc(userDocRef, {
-        [`levelStatus.${level}.score`]: score,
-        [`levelStatus.${level}.maxScore`]: maxScore,
-      });
-
-      console.log(`Score updated in Firestore for level ${level}`);
     } catch (error) {
       console.error('Error updating score in Firestore:', error);
     }
