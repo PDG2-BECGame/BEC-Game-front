@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, orderBy } from "firebase/firestore"; // Importamos query y orderBy
 import { firestore } from "../firebase/firebaseConfig";
 import { questionsByLevel as defaultQuestions } from "../consts/questions";
 
@@ -43,7 +43,8 @@ const useFetchQuestions = (level: string) => {
 
       try {
         const questionsCollection = collection(firestore, `levels/${levelId}/questions`);
-        const snapshot = await getDocs(questionsCollection);
+        const questionsQuery = query(questionsCollection, orderBy("id", "asc"));
+        const snapshot = await getDocs(questionsQuery);
 
         if (!snapshot.empty) {
           const fetchedQuestions: Question[] = snapshot.docs.map((doc) => {
@@ -57,12 +58,14 @@ const useFetchQuestions = (level: string) => {
               feedback: data.feedback || "Sin feedback disponible",
             };
           });
+
           setQuestions(fetchedQuestions);
         } else {
           setQuestions(defaultQuestions[parseInt(level, 10)] || []); // Fallback
         }
       } catch (err) {
-        setError("Error loading questions.");
+        console.error("Error fetching questions:", err);
+        setError("Error al cargar las preguntas.");
         setQuestions(defaultQuestions[parseInt(level, 10)] || []); // Fallback
       } finally {
         setIsLoading(false);
