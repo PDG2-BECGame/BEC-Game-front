@@ -34,7 +34,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     let unsubscribeUserDoc: () => void = () => {};
 
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
-      console.log('Auth state changed:', user); // Log para verificar si el usuario está autenticado
       setCurrentUser(user);
 
       if (user) {
@@ -48,7 +47,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             async (userDoc) => {
               if (userDoc.exists()) {
                 const userData = userDoc.data();
-                console.log('User document data from Firestore:', userData); // Log de los datos crudos del usuario
 
                 let organizationName: string | null = null;
 
@@ -60,7 +58,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
                     if (orgDoc.exists()) {
                       organizationName = orgDoc.data()?.name || null;
-                      console.log('Organization name:', organizationName); // Log para la organización
                     }
                   } catch (orgError) {
                     console.error('Error al obtener la organización desde Firestore:', orgError);
@@ -69,7 +66,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
                 // Calcular puntaje global dinámicamente
                 const levelStatus = userData.levelStatus || {};
-                console.log('Level Status from Firestore:', levelStatus); // Log del estado de los niveles
 
                 let totalScore = 0;
 
@@ -84,8 +80,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                   {} as LevelStatus
                 );
 
-                console.log('Mapped Level Scores:', levelScores); // Log de los puntajes mapeados
-
                 // Actualizar los datos del usuario
                 setUserData({
                   name: userData.name || 'Usuario',
@@ -96,7 +90,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                   levelScores,
                 });
               } else {
-                console.warn(`No se encontró el documento del usuario con UID: ${user.uid}`);
                 setUserData(null);
               }
             },
@@ -110,7 +103,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setUserData(null);
         }
       } else {
-        console.warn('No user authenticated.');
         setUserData(null);
 
         // Desuscribirse del listener del documento del usuario si existe

@@ -53,8 +53,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
   useEffect(() => {
     if (userData) {
-      console.log('UserData in UserContext:', userData);
-
       // Calcular el totalScore y el maxTotalScore
       let totalScore = 0;
       let maxTotalScore = 0;
@@ -78,7 +76,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
       setIsLoading(false);
     } else {
-      console.warn('No userData available in UserContext.');
       setUser(null);
       setIsLoading(false);
     }
@@ -106,9 +103,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           [`levelStatus.${level}.score`]: newScore,
           [`levelStatus.${level}.maxScore`]: maxScore,
         });
-        console.log(`Score updated in Firestore for level ${level}`);
-      } else {
-        console.log('New score is not higher than current score. No update performed.');
       }
 
       // Actualizar el estado local
@@ -165,8 +159,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       }, {} as any);
 
       await updateDoc(userDocRef, resetLevelStatus);
-
-      console.log('User scores reset in Firestore.');
     } catch (error) {
       console.error('Error resetting user scores in Firestore:', error);
     }
