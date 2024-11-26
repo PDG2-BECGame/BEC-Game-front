@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
-import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
+import { onAuthStateChanged, User as FirebaseUser, signOut } from 'firebase/auth';
 import { auth, firestore } from '../firebase/firebaseConfig';
 import { doc, onSnapshot, getDoc } from 'firebase/firestore'; // Importamos onSnapshot
 
@@ -7,6 +7,7 @@ import { doc, onSnapshot, getDoc } from 'firebase/firestore'; // Importamos onSn
 interface AuthContextType {
   currentUser: FirebaseUser | null;
   userData: User | null;
+  logout: () => Promise<void>; // Agregamos la función de cierre de sesión
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -29,6 +30,17 @@ interface User {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
   const [userData, setUserData] = useState<User | null>(null);
+
+  // Función para cerrar sesión
+  const logout = async () => {
+    try {
+      await signOut(auth); // Cierra la sesión con Firebase
+      setCurrentUser(null); // Resetea el estado local
+      setUserData(null); // Limpia los datos adicionales del usuario
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
+  };
 
   useEffect(() => {
     let unsubscribeUserDoc: () => void = () => {};
@@ -122,7 +134,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   return (
-    <AuthContext.Provider value={{ currentUser, userData }}>
+    <AuthContext.Provider value={{ currentUser, userData, logout }}>
       {children}
     </AuthContext.Provider>
   );
