@@ -4,8 +4,11 @@ import { firestore } from "../firebase/firebaseConfig";
 import { questionsByLevel as defaultQuestions } from "../consts/questions";
 
 // Importa imágenes
-import image1 from "../assets/Correo.png";
-import image2 from "../assets/BePRO_logo.svg";
+import image1 from "../assets/Level3-Questions/1.png";
+import image2 from "../assets/Level3-Questions/2.png";
+import image3 from "../assets/Level3-Questions/3.png";
+import image4 from "../assets/Level3-Questions/4.png";
+import image5 from "../assets/Level3-Questions/5.png";
 
 export interface Question {
   id: number;
@@ -31,6 +34,9 @@ const useFetchQuestions = (level: string) => {
     const imageMapping: { [key: number]: string } = {
       1: image1,
       2: image2,
+      3: image3,
+      4: image4,
+      5: image5,
     };
 
     const fetchQuestions = async () => {
