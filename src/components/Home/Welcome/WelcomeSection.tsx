@@ -14,7 +14,7 @@ export const WelcomeSection = () => {
                 </p>
             </div>
             <div className="flex items-center pt-14">
-                <VideoPlayer videoId="i6xJ8G5__TQ" /> {/* ID del video de YouTube ajustado */}
+                <VideoPlayer videoId="pLt89HSBZkk" /> {/* ID del video de YouTube ajustado */}
             </div>
         </div>
     )

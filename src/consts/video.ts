@@ -11,28 +11,28 @@ export const videoData: { [key: string]: VideoData } = {
     '1': {
         headerTitle: 'Nivel 1',
         title: 'Clase 1',
-        videoId: 'xEg1KR3Dy44', // Reemplaza con el ID real del video del nivel 1
-        descriptionTitle: 'Conciencia Crítica: Reconociendo la Amenaza del BEC',
-        date: '10/10/2024',
+        videoId: '3uWaWLwgYtk', // Reemplaza con el ID real del video del nivel 1
+        descriptionTitle: 'Introducción a los conceptos fundamentales del BEC',
+        date: '20/11/2024',
         description:
-            'El objetivo es enfatizar la importancia de reconocer y entender el Business Email Compromise (BEC) como una amenaza significativa en el entorno empresarial. Se busca que los usuarios comprendan las implicaciones de estos fraudes y la necesidad de estar alerta ante las tácticas que usan los estafadores.',
+            'Este nivel tiene como objetivo construir una base teórica sobre el BEC en los empleados, incluyendo la definición, objetivos y técnicas comunes, como la suplantación de identidad y el uso de ingeniería social. A través de un video introductorio y un cuestionario de diez preguntas, el usuario se familiariza con los conceptos básicos y entiende el impacto de estos ataques en el entorno corporativo.',
     },
     '2': {
         headerTitle: 'Nivel 2',
         title: 'Clase 2',
-        videoId: 'GfFcHAtsstE', // Reemplaza con el ID real del video del nivel 2
-        descriptionTitle: 'Protegiendo tu Organización contra el BEC',
-        date: '11/10/2024',
+        videoId: 'ar9kd_yKMMc', // Reemplaza con el ID real del video del nivel 2
+        descriptionTitle: 'Identificación de señales de advertencia en correos sospechosos',
+        date: '20/11/2024',
         description:
-            'En esta clase, exploraremos estrategias y mejores prácticas para proteger a tu organización de los ataques de BEC. Aprenderás sobre las medidas preventivas y cómo implementar políticas de seguridad efectivas.',
+            'El fin de este nivel es desarrollar habilidades analíticas que permitan a los empleados identificar señales de advertencia en correos electrónicos sospechosos y reforzar su sentido crítico para el análisis de comunicaciones potencialmente peligrosas. Además, se presentan elementos clave que pueden indicar un ataque BEC, como dominios sospechosos, tonos de urgencia y solicitudes inusuales. Este nivel incluye otro video educativo y un cuestionario de diez preguntas diseñado para evaluar la capacidad del usuario de reconocer patrones de fraude.',
     },
     '3': {
         headerTitle: 'Nivel 3',
         title: 'Clase 3',
-        videoId: '4cLCnHCLnJ8', // Reemplaza con el ID real del video del nivel 3
+        videoId: 'y_rhWHL_kFM', // Reemplaza con el ID real del video del nivel 3
         descriptionTitle: 'Respuesta y Recuperación ante un Ataque de BEC',
-        date: '12/10/2024',
+        date: '20/11/2024',
         description:
-            'Esta sesión se enfoca en cómo responder de manera eficiente a un ataque de BEC. Discutiremos los pasos para mitigar el impacto y las acciones necesarias para recuperar la seguridad.',
+            'El fin de este nivel es consolidar el conocimiento y las habilidades adquiridas en los niveles anteriores mediante la práctica en un entorno seguro, permitiendo que los empleados se sientan preparados para actuar en situaciones reales de BEC. Este nivel es de aplicación práctica y consiste en una serie de escenarios simulados donde el usuario debe decidir si un correo electrónico es legítimo o presenta características de un ataque BEC. Los escenarios están diseñados para reflejar situaciones reales en las que los empleados deben tomar decisiones rápidas basadas en su análisis de los correos electrónicos. Se presenta el último vídeo de capacitación, con el objetivo de dar los consejos finales para que los usuarios del juego logren responder satisfactoriamente la simulación.',
     },
 };
