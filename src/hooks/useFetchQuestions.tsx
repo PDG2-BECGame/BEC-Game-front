@@ -18,8 +18,8 @@ export interface Question {
 
 const levelIdMap: { [key: string]: string } = {
   "1": "xsnFmviaCfeB5LLsi0rg",
-  "2": "GY2C4NFa4zxzjuJajDOH",
-  "3": "yie8gZR8yZ5kYvrnEP6R",
+  "2": "yie8gZR8yZ5kYvrnEP6R",
+  "3": "GY2C4NFa4zxzjuJajDOH",
 };
 
 const useFetchQuestions = (level: string) => {
