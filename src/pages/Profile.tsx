@@ -14,9 +14,15 @@ const Profile: React.FC = () => {
   // Validación para datos predeterminados del usuario
   const userName = user?.name || 'Nombre no disponible';
   const userEmail = user?.email || 'Correo no disponible';
-  const userOrganization = user?.organizationName || 'Sin organización'; // Cambiado a organizationName
+  const userOrganization = user?.organizationName || 'Sin organización';
   const userTotalScore = user?.totalScore ?? 0;
   const userLevelScores = user?.levelScores || {};
+
+  // Calcular el puntaje máximo total
+  const userMaxTotalScore = Object.values(userLevelScores).reduce(
+    (total, level) => total + (level.maxScore || 0),
+    0
+  );
 
   return (
     <div className="p-6 bg-gray-100 text-gray-800 rounded-xl shadow-md max-w-lg mx-auto mt-10 border border-gray-300">
@@ -45,7 +51,9 @@ const Profile: React.FC = () => {
         {/* Puntaje total del usuario */}
         <div className="flex justify-between items-center p-4 bg-white rounded-lg shadow-sm">
           <h2 className="text-sm font-semibold text-gray-600">Puntaje Total:</h2>
-          <p className="text-gray-700">{userTotalScore}</p>
+          <p className="text-gray-700">
+            {userTotalScore} / {userMaxTotalScore}
+          </p>
         </div>
         {/* Sección de puntajes por nivel */}
         <div className="p-4 bg-white rounded-lg shadow-sm">
@@ -53,10 +61,10 @@ const Profile: React.FC = () => {
           {Object.keys(userLevelScores).length > 0 ? (
             <ul className="list-disc list-inside text-gray-700">
               {Object.entries(userLevelScores)
-                .sort(([levelA], [levelB]) => Number(levelA) - Number(levelB)) // Ordena los niveles numéricamente
+                .sort(([levelA], [levelB]) => parseInt(levelA.replace('level', '')) - parseInt(levelB.replace('level', ''))) // Ordena los niveles numéricamente
                 .map(([level, { score, maxScore }]) => (
                   <li key={level}>
-                    Nivel {level}: {score} / {maxScore}
+                    Nivel {level.replace('level', '')}: {score} / {maxScore}
                   </li>
                 ))}
             </ul>

@@ -16,6 +16,7 @@ interface User {
   organitationId: string | null;
   organizationName: string | null;
   totalScore: number;
+  maxTotalScore: number; // Agregado para el puntaje máximo total
   levelScores: LevelScores;
 }
 
@@ -34,7 +35,13 @@ interface UserProviderProps {
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const { userData } = useContext(AuthContext) as {
-    userData: User | null;
+    userData: {
+      name: string;
+      email: string;
+      organitationId?: string;
+      organizationName?: string;
+      levelScores?: LevelScores;
+    } | null;
   };
 
   const [user, setUser] = useState<User | null>(null);
@@ -44,14 +51,25 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     if (userData) {
       console.log('UserData in UserContext:', userData);
 
-      // Usar directamente userData.levelScores
+      // Calcular el totalScore y el maxTotalScore
+      let totalScore = 0;
+      let maxTotalScore = 0;
+
+      const levelScores = userData.levelScores || {};
+      for (const level in levelScores) {
+        const { score, maxScore } = levelScores[level];
+        totalScore += score;
+        maxTotalScore += maxScore;
+      }
+
       setUser({
         name: userData.name || 'Usuario',
         email: userData.email || '',
         organitationId: userData.organitationId || null,
         organizationName: userData.organizationName || 'Sin organización',
-        totalScore: userData.totalScore || 0,
-        levelScores: userData.levelScores || {}, // Tomamos directamente los datos ya procesados
+        totalScore,
+        maxTotalScore, // Guardar el puntaje máximo total
+        levelScores,
       });
 
       setIsLoading(false);
