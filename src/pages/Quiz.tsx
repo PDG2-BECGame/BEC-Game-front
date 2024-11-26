@@ -83,7 +83,25 @@ const Quiz: React.FC = () => {
       setHasAnswered(false);
       setCurrentFeedback("");
     } else {
-      updateLevelScore(parseInt(level, 10), levelScore); // Convierte `level` a número
+      // Determinar el maxScore según el nivel
+      let maxScore = 0;
+      switch (level) {
+        case '1':
+          maxScore = 500;
+          break;
+        case '2':
+          maxScore = 500;
+          break;
+        case '3':
+          maxScore = 250;
+          break;
+        default:
+          maxScore = 0;
+      }
+
+      const levelKey = `level${level}`; // 'level1', 'level2', etc.
+      updateLevelScore(levelKey, levelScore, maxScore);
+
       setQuizCompleted(true);
     }
   };

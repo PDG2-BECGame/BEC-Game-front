@@ -1,5 +1,9 @@
 import React, { createContext, useContext, ReactNode, useEffect, useState } from 'react';
 import { AuthContext } from './AuthContext';
+import { doc, updateDoc } from 'firebase/firestore';
+import { firestore } from '../firebase/firebaseConfig';
+import { User as FirebaseUser } from 'firebase/auth';
+
 
 interface LevelScore {
   score: number;
@@ -34,7 +38,8 @@ interface UserProviderProps {
 }
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-  const { userData } = useContext(AuthContext) as {
+  const { currentUser, userData } = useContext(AuthContext) as {
+    currentUser: FirebaseUser | null;
     userData: {
       name: string;
       email: string;
@@ -80,37 +85,81 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     }
   }, [userData]);
 
-  const updateLevelScore = (level: string, score: number, maxScore: number) => {
-    setUser((prevUser) => {
-      if (!prevUser) return prevUser;
+  const updateLevelScore = async (level: string, score: number, maxScore: number) => {
+    if (!currentUser) {
+      console.error('No user is currently authenticated.');
+      return;
+    }
 
-      const previousScore = prevUser.levelScores[level]?.score || 0;
-      const newScore = Math.max(score, previousScore);
+    try {
+      // Actualizar el estado local
+      setUser((prevUser) => {
+        if (!prevUser) return prevUser;
 
-      return {
-        ...prevUser,
-        totalScore: prevUser.totalScore + (newScore - previousScore),
-        levelScores: {
-          ...prevUser.levelScores,
-          [level]: { score: newScore, maxScore },
-        },
-      };
-    });
+        const previousScore = prevUser.levelScores[level]?.score || 0;
+        const newScore = Math.max(score, previousScore);
+
+        return {
+          ...prevUser,
+          totalScore: prevUser.totalScore + (newScore - previousScore),
+          levelScores: {
+            ...prevUser.levelScores,
+            [level]: { score: newScore, maxScore },
+          },
+        };
+      });
+
+      // Actualizar en Firestore
+      const userDocRef = doc(firestore, 'users', currentUser.uid);
+      await updateDoc(userDocRef, {
+        [`levelStatus.${level}.score`]: score,
+        [`levelStatus.${level}.maxScore`]: maxScore,
+      });
+
+      console.log(`Score updated in Firestore for level ${level}`);
+    } catch (error) {
+      console.error('Error updating score in Firestore:', error);
+    }
   };
 
-  const resetUserScore = () => {
-    setUser((prevUser) => {
-      if (!prevUser) return prevUser;
+  const resetUserScore = async () => {
+    if (!currentUser) {
+      console.error('No user is currently authenticated.');
+      return;
+    }
 
-      return {
-        ...prevUser,
-        totalScore: 0,
-        levelScores: Object.keys(prevUser.levelScores).reduce((acc, key) => {
+    try {
+      // Resetear el estado local
+      setUser((prevUser) => {
+        if (!prevUser) return prevUser;
+
+        const resetLevelScores = Object.keys(prevUser.levelScores).reduce((acc, key) => {
           acc[key] = { score: 0, maxScore: prevUser.levelScores[key].maxScore };
           return acc;
-        }, {} as LevelScores),
-      };
-    });
+        }, {} as LevelScores);
+
+        return {
+          ...prevUser,
+          totalScore: 0,
+          levelScores: resetLevelScores,
+        };
+      });
+
+      // Resetear en Firestore
+      const userDocRef = doc(firestore, 'users', currentUser.uid);
+
+      // Crear un objeto con los campos a actualizar
+      const resetLevelStatus = Object.keys(user?.levelScores || {}).reduce((acc, level) => {
+        acc[`levelStatus.${level}.score`] = 0;
+        return acc;
+      }, {} as any);
+
+      await updateDoc(userDocRef, resetLevelStatus);
+
+      console.log('User scores reset in Firestore.');
+    } catch (error) {
+      console.error('Error resetting user scores in Firestore:', error);
+    }
   };
 
   return (
