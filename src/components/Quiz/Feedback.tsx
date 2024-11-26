@@ -6,6 +6,8 @@ interface FeedbackProps {
 }
 
 const Feedback: React.FC<FeedbackProps> = ({ isCorrect, feedbackMessage }) => {
+  if (isCorrect === null) return null;
+
   return (
     <div className="mt-4 p-4 bg-gray-200 rounded">
       <p className="text-lg font-semibold">
