@@ -2,17 +2,17 @@ import React from "react";
 
 interface QuizResultsProps {
   levelScore: number;
-  totalQuestions: number;
+  maxScore: number; // Agregamos maxScore a los props
   onRestart: () => void;
 }
 
-const QuizResults: React.FC<QuizResultsProps> = ({ levelScore, totalQuestions, onRestart }) => {
+const QuizResults: React.FC<QuizResultsProps> = ({ levelScore, maxScore, onRestart }) => {
   return (
     <div className="flex flex-col items-center justify-center p-6 bg-white rounded shadow-lg">
       <h2 className="text-2xl font-bold mb-4">¡Quiz Completado!</h2>
       <p className="text-lg mb-4">
         Obtuviste <span className="font-semibold">{levelScore}</span> puntos de un total posible de{" "}
-        <span className="font-semibold">{totalQuestions * 250}</span> puntos.
+        <span className="font-semibold">{maxScore}</span> puntos.
       </p>
       <button
         onClick={onRestart}

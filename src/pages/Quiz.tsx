@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 
@@ -14,28 +14,13 @@ import Footer from "../components/Quiz/Footer";
 import QuizResults from "../components/Quiz/QuizResults";
 
 const Quiz: React.FC = () => {
-  // Extrae `level` de los parámetros de la URL
+  // Todos los Hooks deben estar al inicio del componente
   const { level } = useParams<{ level: string }>();
-
-  // Validación inicial para `level`
-  if (!level) {
-    return <p>Error: No se especificó el nivel. Verifica la URL.</p>;
-  }
-
-  // Usa el hook para cargar las preguntas
-  const { questions, isLoading, error } = useFetchQuestions(level);
-
-  // Accede al UserContext
+  const { questions, isLoading, error } = useFetchQuestions(level || "");
   const userContext = useContext(UserContext);
+  const navigate = useNavigate();
 
-  if (!userContext) {
-    return <p>Error: No se encontró el contexto de usuario.</p>;
-  }
-
-  // Extrae propiedades y métodos del contexto
-  const { updateLevelScore } = userContext;
-
-  // Manejo de estados locales
+  // Estados locales
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
@@ -44,7 +29,40 @@ const Quiz: React.FC = () => {
   const [currentFeedback, setCurrentFeedback] = useState<string>("");
   const [quizCompleted, setQuizCompleted] = useState<boolean>(false);
 
-  const navigate = useNavigate();
+  // Aseguramos que `level` siempre tenga un valor
+  const currentLevel = level || "";
+
+  // Determinar el maxScore según el nivel
+  let maxScore = 0;
+  switch (currentLevel) {
+    case '1':
+      maxScore = 500;
+      break;
+    case '2':
+      maxScore = 500;
+      break;
+    case '3':
+      maxScore = 250;
+      break;
+    default:
+      maxScore = 0;
+  }
+
+  // Calcular el puntaje por pregunta
+  const scorePerQuestion = useMemo(() => {
+    return maxScore / (questions?.length || 1);
+  }, [maxScore, questions]);
+
+  // Validaciones y retornos condicionales después de los Hooks
+  if (!currentLevel) {
+    return <p>Error: No se especificó el nivel. Verifica la URL.</p>;
+  }
+
+  if (!userContext) {
+    return <p>Error: No se encontró el contexto de usuario.</p>;
+  }
+
+  const { updateLevelScore } = userContext;
 
   // Manejo de carga y errores
   if (isLoading) {
@@ -67,7 +85,7 @@ const Quiz: React.FC = () => {
     setHasAnswered(true);
 
     if (correct) {
-      setLevelScore((prevScore) => prevScore + 250);
+      setLevelScore((prevScore) => prevScore + scorePerQuestion);
     }
 
     setCurrentFeedback(
@@ -83,23 +101,7 @@ const Quiz: React.FC = () => {
       setHasAnswered(false);
       setCurrentFeedback("");
     } else {
-      // Determinar el maxScore según el nivel
-      let maxScore = 0;
-      switch (level) {
-        case '1':
-          maxScore = 500;
-          break;
-        case '2':
-          maxScore = 500;
-          break;
-        case '3':
-          maxScore = 250;
-          break;
-        default:
-          maxScore = 0;
-      }
-
-      const levelKey = `level${level}`; // 'level1', 'level2', etc.
+      const levelKey = `level${currentLevel}`; // 'level1', 'level2', etc.
       updateLevelScore(levelKey, levelScore, maxScore);
 
       setQuizCompleted(true);
@@ -113,16 +115,17 @@ const Quiz: React.FC = () => {
     return (
       <div className="flex flex-col min-h-screen bg-gray-100">
         <HeaderQuiz
-          currentLevel={level}
+          currentLevel={currentLevel}
           totalQuestions={questions.length}
           levelScore={levelScore}
+          maxScore={maxScore}
           onExit={handleExit}
         />
         <main className="flex-grow p-6 flex flex-col items-center justify-center pb-24">
           <QuizResults
             levelScore={levelScore}
-            totalQuestions={questions.length}
-            onRestart={handleRestart}
+            maxScore={maxScore}
+            onRestart={handleRestart} // Eliminamos totalQuestions
           />
         </main>
       </div>
@@ -132,9 +135,10 @@ const Quiz: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       <HeaderQuiz
-        currentLevel={level}
+        currentLevel={currentLevel}
         totalQuestions={questions.length}
         levelScore={levelScore}
+        maxScore={maxScore}
         onExit={handleExit}
       />
       <main className="flex-grow p-6 flex flex-row items-start justify-center pb-24">
