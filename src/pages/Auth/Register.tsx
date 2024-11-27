@@ -29,15 +29,15 @@ const Register: React.FC = () => {
         <div className="px-8">
           {/* Logo y Título */}
           <div className="flex items-center mb-6">
-            <img src={BePROLogo} alt="BePRO Logo" className="h-12 w-12 mr-4" />
-            <h1 className="text-4xl font-bold">BEPRO</h1>
+          <img src={BePROLogo} alt="BePRO Logo" className="h-32 w-32 mr-4" /> {/* Logo más grande */}
+            <h1 className="text-6xl font-bold">BEPRO</h1> {/* BEPRO más grande */}
           </div>
 
           {/* Frase Principal */}
-          <h2 className="text-5xl font-bold mb-4">Domina, detecta, defiende</h2>
+          <h2 className="text-4xl font-semibold mb-4">Domina, detecta, defiende</h2>
 
           {/* Descripción */}
-          <p className="text-lg">
+          <p className="text-xl">
             Juego serio para capacitar a empleados en la detección de técnicas de ingeniería social y reducir ataques de compromiso de correo electrónico empresarial (BEC).
           </p>
         </div>
