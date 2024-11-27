@@ -40,10 +40,15 @@ const Sidebar = () => {
             <img src={clasificado} alt="Imagen de clasificado" />
             Clasificado
           </Link>
-          <Link to="/help" className="font-poppins flex items-center hover:text-gray-300 gap-2">
+          <Link
+            to="#"
+            className="font-poppins flex items-center text-gray-500 gap-2"
+            onClick={(e) => e.preventDefault()} // Evita la acción por defecto
+          >
             <img src={ayuda} alt="Imagen de ayuda" />
             Ayuda
           </Link>
+
         </nav>
       </div>
       {/* Botón de Cerrar Sesión */}
