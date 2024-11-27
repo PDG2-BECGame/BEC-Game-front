@@ -9,10 +9,28 @@ interface PrivateRouteProps {
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
   const authContext = useContext(AuthContext);
 
-  if (!authContext || !authContext.currentUser) {
+  if (!authContext) {
     return <Navigate to="/login" />;
   }
 
+  const { currentUser, loading } = authContext;
+
+  // Mostrar un indicador de carga si está cargando la información del usuario
+  if (loading) {
+    return <div>Cargando...</div>;
+  }
+
+  // Redirigir al login si no hay usuario autenticado
+  if (!currentUser) {
+    return <Navigate to="/login" />;
+  }
+
+  // Redirigir a la página de verificación de correo si el correo no ha sido verificado
+  if (!currentUser.emailVerified) {
+    return <Navigate to="/verify-email" />;
+  }
+
+  // Renderizar los hijos si todas las verificaciones pasan
   return children;
 };
 

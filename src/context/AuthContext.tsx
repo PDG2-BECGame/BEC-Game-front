@@ -1,13 +1,14 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, User as FirebaseUser, signOut } from 'firebase/auth';
 import { auth, firestore } from '../firebase/firebaseConfig';
-import { doc, onSnapshot, getDoc } from 'firebase/firestore'; // Importamos onSnapshot
+import { doc, onSnapshot, getDoc } from 'firebase/firestore';
 
 // Interfaz para los datos adicionales del usuario
 interface AuthContextType {
   currentUser: FirebaseUser | null;
   userData: User | null;
-  logout: () => Promise<void>; // Agregamos la función de cierre de sesión
+  loading: boolean; // Agregamos el estado de carga
+  logout: () => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -21,22 +22,23 @@ interface LevelStatus {
 interface User {
   name: string;
   email: string;
-  organitationId: string | null; // ID de la organización
-  organizationName: string | null; // Nombre de la organización
-  totalScore: number; // Puntaje total calculado
-  levelScores: LevelStatus; // Puntajes por nivel
+  organitationId: string | null;
+  organizationName: string | null;
+  totalScore: number;
+  levelScores: LevelStatus;
 }
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
   const [userData, setUserData] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true); // Estado de carga
 
   // Función para cerrar sesión
   const logout = async () => {
     try {
-      await signOut(auth); // Cierra la sesión con Firebase
-      setCurrentUser(null); // Resetea el estado local
-      setUserData(null); // Limpia los datos adicionales del usuario
+      await signOut(auth);
+      setCurrentUser(null);
+      setUserData(null);
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
     }
@@ -49,6 +51,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setCurrentUser(user);
 
       if (user) {
+        // Verificar si el correo electrónico ha sido verificado
+        if (!user.emailVerified) {
+          // Opcional: Puedes redirigir al usuario a una página de verificación aquí
+          console.log('El correo electrónico no ha sido verificado.');
+        }
+
         try {
           // Obtener la referencia al documento del usuario
           const userDocRef = doc(firestore, 'users', user.uid);
@@ -104,18 +112,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               } else {
                 setUserData(null);
               }
+
+              setLoading(false); // Finalizamos la carga
             },
             (error) => {
               console.error('Error al obtener datos del usuario:', error);
               setUserData(null);
+              setLoading(false);
             }
           );
         } catch (error) {
           console.error('Error al establecer listener en el documento del usuario:', error);
           setUserData(null);
+          setLoading(false);
         }
       } else {
         setUserData(null);
+        setLoading(false);
 
         // Desuscribirse del listener del documento del usuario si existe
         if (unsubscribeUserDoc) {
@@ -134,7 +147,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   return (
-    <AuthContext.Provider value={{ currentUser, userData, logout }}>
+    <AuthContext.Provider value={{ currentUser, userData, loading, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,20 +1,20 @@
-// App.tsx
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Layout from './components/Sidebar/Layout';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
 import Classification from './pages/Classification';
 import Login from './pages/Auth/Login';
-import Register from './pages/Auth/Register'; // Importamos Register
+import Register from './pages/Auth/Register';
+import VerifyEmail from './pages/Auth/VerifyEmail'; // Importamos VerifyEmail
 import VideoTraining from './pages/VideoTraining';
 import Quiz from './pages/Quiz';
-import ScrollToTop from './components/ScrollToTop'; // Importamos ScrollToTop
-import PrivateRoute from './routes/PrivateRoute'; // Importamos PrivateRoute
+import ScrollToTop from './components/ScrollToTop';
+import PrivateRoute from './routes/PrivateRoute';
 
 function App() {
   return (
     <Router>
-      <ScrollToTop /> {/* Añadimos el componente aquí */}
+      <ScrollToTop />
       <Routes>
         {/* Rutas que usan el Layout y requieren autenticación */}
         <Route
@@ -72,6 +72,7 @@ function App() {
         {/* Rutas que no usan el Layout y no requieren autenticación */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/verify-email" element={<VerifyEmail />} /> {/* Nueva ruta */}
       </Routes>
     </Router>
   );

@@ -13,13 +13,22 @@ const useLogin = () => {
     e.preventDefault();
     setError('');
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      navigate('/');
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      if (!user.emailVerified) {
+        // Cerrar sesión y redirigir a la página de verificación
+        await auth.signOut();
+        navigate('/verify-email');
+      } else {
+        navigate('/');
+      }
     } catch (err: any) {
       setError('Correo electrónico o contraseña incorrectos.');
       console.error('Error durante el inicio de sesión:', err);
     }
   };
+
 
   return {
     email,

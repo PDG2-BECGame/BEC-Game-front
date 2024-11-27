@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { doc, setDoc, collection, getDocs, addDoc } from 'firebase/firestore';
 import { auth, firestore } from '../firebase/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
@@ -45,6 +45,9 @@ const useRegister = () => {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
+      // Enviar correo de verificación
+      await sendEmailVerification(user);
+
       // Crear o seleccionar organización
       let selectedOrganizationId = organization;
       if (newOrganization) {
@@ -71,7 +74,8 @@ const useRegister = () => {
       };
       await setDoc(doc(firestore, 'users', user.uid), userDoc);
 
-      navigate('/');
+      // Redirigir a una página que indique que se envió el correo de verificación
+      navigate('/verify-email');
     } catch (err: any) {
       setError(err.message);
       console.error('Error durante el registro:', err);
