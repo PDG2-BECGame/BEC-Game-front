@@ -1,7 +1,8 @@
+// src/pages/Auth/Register.tsx
 import React from 'react';
 import { Link } from 'react-router-dom';
 import useRegister from '../../hooks/useRegister';
-import BePROLogo from '../../assets/BePRO_logo.svg'; // Asegúrate de importar correctamente tu logo
+import BePROLogo from '../../assets/BePRO_logo.svg';
 
 const Register: React.FC = () => {
   const {
@@ -19,6 +20,7 @@ const Register: React.FC = () => {
     setNewOrganization,
     organizations,
     error,
+    passwordError, // Recibido desde el hook
     handleRegister,
   } = useRegister();
 
@@ -29,8 +31,8 @@ const Register: React.FC = () => {
         <div className="px-8">
           {/* Logo y Título */}
           <div className="flex items-center mb-6">
-          <img src={BePROLogo} alt="BePRO Logo" className="h-32 w-32 mr-4" /> {/* Logo más grande */}
-            <h1 className="text-6xl font-bold">BEPRO</h1> {/* BEPRO más grande */}
+            <img src={BePROLogo} alt="BePRO Logo" className="h-32 w-32 mr-4" />
+            <h1 className="text-6xl font-bold">BEPRO</h1>
           </div>
 
           {/* Frase Principal */}
@@ -54,7 +56,7 @@ const Register: React.FC = () => {
 
           <h2 className="text-3xl font-bold mb-6">Crear una cuenta</h2>
           {error && (
-            <div className="bg-red-100 text-red-700 p-2 rounded mb-4">
+            <div className="bg-red-100 text-red-700 p-4 rounded mb-4">
               <p>{error}</p>
             </div>
           )}
@@ -105,6 +107,23 @@ const Register: React.FC = () => {
                 className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-customBlue"
                 required
               />
+              {passwordError && (
+                <p className="text-red-500 text-sm mt-1">{passwordError}</p>
+              )}
+            </div>
+
+            {/* Requisitos de la Contraseña */}
+            <div className="mb-4">
+              <p className="text-gray-600 text-sm">
+                La contraseña debe cumplir con los siguientes requisitos:
+              </p>
+              <ul className="list-disc list-inside text-gray-600 text-sm">
+                <li>Mínimo 8 caracteres</li>
+                <li>Al menos una letra minúscula</li>
+                <li>Al menos una letra mayúscula</li>
+                <li>Al menos un número</li>
+                <li>Al menos un carácter especial (!@#$%^&*)</li>
+              </ul>
             </div>
 
             {/* Confirmar Contraseña */}

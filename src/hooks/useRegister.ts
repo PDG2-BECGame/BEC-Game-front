@@ -1,3 +1,4 @@
+// src/hooks/useRegister.ts
 import { useState, useEffect } from 'react';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { doc, setDoc, collection, getDocs, addDoc } from 'firebase/firestore';
@@ -13,6 +14,7 @@ const useRegister = () => {
   const [newOrganization, setNewOrganization] = useState('');
   const [organizations, setOrganizations] = useState<any[]>([]);
   const [error, setError] = useState('');
+  const [passwordError, setPasswordError] = useState(''); // Nuevo estado para errores de contraseña
   const navigate = useNavigate();
 
   // Cargar las organizaciones existentes desde Firebase
@@ -32,12 +34,51 @@ const useRegister = () => {
     fetchOrganizations();
   }, []);
 
+  // Función para validar la contraseña
+  const validatePassword = (password: string): string => {
+    const errors = [];
+    if (password.length < 8) {
+      errors.push('Debe tener al menos 8 caracteres.');
+    }
+    if (!/[a-z]/.test(password)) {
+      errors.push('Debe contener al menos una letra minúscula.');
+    }
+    if (!/[A-Z]/.test(password)) {
+      errors.push('Debe contener al menos una letra mayúscula.');
+    }
+    if (!/[0-9]/.test(password)) {
+      errors.push('Debe contener al menos un número.');
+    }
+    if (!/[!@#$%^&*]/.test(password)) {
+      errors.push('Debe contener al menos un carácter especial (!@#$%^&*).');
+    }
+    return errors.join(' ');
+  };
+
+  // useEffect para validar la contraseña en tiempo real
+  useEffect(() => {
+    if (password) {
+      const validationError = validatePassword(password);
+      setPasswordError(validationError);
+    } else {
+      setPasswordError('');
+    }
+  }, [password]);
+
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
+    // Validar que las contraseñas coincidan
     if (password !== confirmPassword) {
       setError('Las contraseñas no coinciden.');
+      return;
+    }
+
+    // Validar la fortaleza de la contraseña
+    const passwordValidationError = validatePassword(password);
+    if (passwordValidationError) {
+      setPasswordError(passwordValidationError);
       return;
     }
 
@@ -77,7 +118,16 @@ const useRegister = () => {
       // Redirigir a una página que indique que se envió el correo de verificación
       navigate('/verify-email');
     } catch (err: any) {
-      setError(err.message);
+      // Manejar errores específicos de Firebase
+      if (err.code === 'auth/email-already-in-use') {
+        setError('El correo electrónico ya está en uso. Por favor, utiliza otro correo o inicia sesión.');
+      } else if (err.code === 'auth/invalid-email') {
+        setError('El correo electrónico no es válido. Por favor, verifica e intenta nuevamente.');
+      } else if (err.code === 'auth/weak-password') {
+        setError('La contraseña es demasiado débil. Por favor, utiliza una contraseña más segura.');
+      } else {
+        setError('Ocurrió un error durante el registro. Por favor, intenta nuevamente más tarde.');
+      }
       console.error('Error durante el registro:', err);
     }
   };
@@ -97,6 +147,7 @@ const useRegister = () => {
     setNewOrganization,
     organizations,
     error,
+    passwordError, // Incluido en el retorno
     handleRegister,
   };
 };
