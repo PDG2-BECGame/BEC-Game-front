@@ -1,110 +1,113 @@
-.gitignore
-eslint.config.js
-index.html
-package.json
-package-lock.json
-postcss.config.js
-README.md
-tailwind.config.js
-tsconfig.app.json
-tsconfig.json
-tsconfig.node.json
-vite.config.ts
-.babelrc
-fileMock.cjs
-jest.config.cjs
-jest.setup.js
-public
-│   BePRO_logo.svg
-│   manifest.json
-│   robots.txt
-src
-│   App.css
-│   App.tsx
-│   index.css
-│   main.tsx
-│   vite-env.d.ts
-│
-├───assets
-│       Ayuda.svg
-│       BePRO_logo.svg
-│       Correo.png
-│       icon-game.svg
-│       icon-problem.svg
-│       icon-solution.svg
-│       Inicio.svg
-│       Perfil.svg
-│       ProfileExample.png
-│       tabla_clasificacion.svg
-│
-├───components
-│   │   Button.tsx
-│   │   ScrollToTop.tsx
-│   │
-│   ├───Home
-│   │   ├───Roadmap
-│   │   │       Level.tsx
-│   │   │       Roadmap.tsx
-│   │   │
-│   │   └───Welcome
-│   │           WelcomeSection.tsx
-│   │
-│   ├───Quiz
-│   │       Feedback.tsx
-│   │       Footer.tsx
-│   │       HeaderQuiz.tsx
-│   │       Options.tsx
-│   │       QuestionCard.tsx
-│   │       QuizResults.tsx
-│   │
-│   ├───Sidebar
-│   │       Layout.tsx
-│   │       Sidebar.tsx
-│   │
-│   ├───tests
-│   │       Feedback.test.tsx
-│   │       Footer.test.tsx
-│   │       Level.test.tsx
-│   │       Option.test.tsx
-│   │       QuestionCard.test.tsx
-│   │       ScrollToTop.test.tsx
-│   │       Sidebar.test.tsx
-│   │       VideoPlayer.test.tsx
-│   │       WelcomeSection.test.tsx
-│   │
-│   ├───Videos
-│   │       VideoPlayer.tsx
-│   │
-│   └───VideoTraining
-│           DescriptionSection.tsx
-│           HeaderSection.tsx
-│           TitleSection.tsx
-│
-├───consts
-│       classificationData.ts
-│       levels.ts
-│       profile.ts
-│       questions.ts
-│       video.ts
-│
-├───context
-│       AuthContext.tsx
-│       UserContext.tsx
-│
-├───firebase
-│       firebaseConfig.ts
-│
-├───pages
-│   │   Classification.tsx
-│   │   Home.tsx
-│   │   Profile.tsx
-│   │   Quiz.tsx
-│   │   VideoTraining.tsx
-│   │
-│   └───Auth
-│           Login.tsx
-│           Register.tsx
-│
-└───routes
-        AppRoutes.tsx
-        PrivateRoute.tsx
+/BEC-Game-front
+$ tree -I 'node_modules|dist'
+.
+├── README.md
+├── eslint.config.js
+├── fileMock.cjs
+├── index.html
+├── jest.config.cjs
+├── jest.setup.js
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+├── public
+│   ├── BePRO_logo.svg
+│   ├── manifest.json
+│   └── robots.txt
+├── src
+│   ├── App.css
+│   ├── App.tsx
+│   ├── assets
+│   │   ├── Ayuda.svg
+│   │   ├── BePRO_logo.svg
+│   │   ├── Correo.png
+│   │   ├── Inicio.svg
+│   │   ├── Level3-Questions
+│   │   │   ├── 1.png
+│   │   │   ├── 2.png
+│   │   │   ├── 3.png
+│   │   │   ├── 4.png
+│   │   │   └── 5.png
+│   │   ├── Perfil.svg
+│   │   ├── ProfileExample.png
+│   │   ├── icon-game.svg
+│   │   ├── icon-problem.svg
+│   │   ├── icon-solution.svg
+│   │   └── tabla_clasificacion.svg
+│   ├── components
+│   │   ├── Button.tsx
+│   │   ├── Home
+│   │   │   ├── Roadmap
+│   │   │   │   ├── Level.tsx
+│   │   │   │   └── Roadmap.tsx
+│   │   │   └── Welcome
+│   │   │       └── WelcomeSection.tsx
+│   │   ├── Quiz
+│   │   │   ├── Feedback.tsx
+│   │   │   ├── Footer.tsx
+│   │   │   ├── HeaderQuiz.tsx
+│   │   │   ├── Options.tsx
+│   │   │   ├── QuestionCard.tsx
+│   │   │   └── QuizResults.tsx
+│   │   ├── ScrollToTop.tsx
+│   │   ├── Sidebar
+│   │   │   ├── Layout.tsx
+│   │   │   └── Sidebar.tsx
+│   │   ├── VideoTraining
+│   │   │   ├── DescriptionSection.tsx
+│   │   │   ├── HeaderSection.tsx
+│   │   │   └── TitleSection.tsx
+│   │   ├── Videos
+│   │   │   └── VideoPlayer.tsx
+│   │   └── tests
+│   │       ├── Feedback.test.tsx
+│   │       ├── Footer.test.tsx
+│   │       ├── Level.test.tsx
+│   │       ├── Option.test.tsx
+│   │       ├── QuestionCard.test.tsx
+│   │       ├── ScrollToTop.test.tsx
+│   │       ├── Sidebar.test.tsx
+│   │       ├── VideoPlayer.test.tsx
+│   │       └── WelcomeSection.test.tsx
+│   ├── consts
+│   │   ├── classificationData.ts
+│   │   ├── levels.ts
+│   │   ├── profile.ts
+│   │   ├── questions.ts
+│   │   └── video.ts
+│   ├── context
+│   │   ├── AuthContext.tsx
+│   │   └── UserContext.tsx
+│   ├── firebase
+│   │   └── firebaseConfig.ts
+│   ├── hooks
+│   │   ├── useFetchLevels.tsx
+│   │   ├── useFetchQuestions.tsx
+│   │   ├── useFetchUsers.tsx
+│   │   ├── useLogin.ts
+│   │   └── useRegister.ts
+│   ├── index.css
+│   ├── main.tsx
+│   ├── pages
+│   │   ├── Auth
+│   │   │   ├── Login.tsx
+│   │   │   ├── Register.tsx
+│   │   │   └── VerifyEmail.tsx
+│   │   ├── Classification.tsx
+│   │   ├── Home.tsx
+│   │   ├── Profile.tsx
+│   │   ├── Quiz.tsx
+│   │   └── VideoTraining.tsx
+│   ├── routes
+│   │   └── PrivateRoute.tsx
+│   └── vite-env.d.ts
+├── tailwind.config.js
+├── tree.txt
+├── tsconfig.app.json
+├── tsconfig.json
+├── tsconfig.node.json
+├── tsconfig.tsbuildinfo
+├── vercel.json
+└── vite.config.ts
+
+20 directories, 88 files

@@ -31,7 +31,7 @@ describe('WelcomeSection', () => {
     // Verificar que el VideoPlayer mock se renderiza con el videoId correcto
     const videoPlayer = getByTestId('mock-video-player');
     expect(videoPlayer).toBeInTheDocument();
-    expect(videoPlayer).toHaveTextContent('Video Player ID: i6xJ8G5__TQ');
+    expect(videoPlayer).toHaveTextContent('Video Player ID: pLt89HSBZkk');
   });
 
   // Prueba 2: Verificar la estructura del contenedor principal
