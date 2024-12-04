@@ -1,4 +1,4 @@
-import React, { useState, useContext, useMemo } from "react";
+import React, { useState, useContext, useEffect, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 
@@ -13,6 +13,15 @@ import Feedback from "../components/Quiz/Feedback";
 import Footer from "../components/Quiz/Footer";
 import QuizResults from "../components/Quiz/QuizResults";
 
+// Define la interfaz para las preguntas
+interface Question {
+  question: string;
+  options: string[];
+  answer: number;
+  feedback?: string;
+  image?: string;
+}
+
 const Quiz: React.FC = () => {
   // Todos los Hooks deben estar al inicio del componente
   const { level } = useParams<{ level: string }>();
@@ -21,6 +30,7 @@ const Quiz: React.FC = () => {
   const navigate = useNavigate();
 
   // Estados locales
+  const [shuffledQuestions, setShuffledQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
@@ -48,10 +58,53 @@ const Quiz: React.FC = () => {
       maxScore = 0;
   }
 
+  // Función para mezclar las opciones y ajustar el índice de la respuesta correcta
+  const shuffleOptions = (question: Question): Question => {
+    // Combina las opciones con sus índices originales
+    const optionsWithIndices = question.options.map((option, index) => ({
+      option,
+      index,
+    }));
+
+    // Algoritmo Fisher-Yates Shuffle para mezclar las opciones
+    for (let i = optionsWithIndices.length - 1; i > 0; i--) {
+      const randomIndex = Math.floor(Math.random() * (i + 1));
+      [optionsWithIndices[i], optionsWithIndices[randomIndex]] = [
+        optionsWithIndices[randomIndex],
+        optionsWithIndices[i],
+      ];
+    }
+
+    // Extrae las opciones mezcladas
+    const shuffledOptions = optionsWithIndices.map((item) => item.option);
+
+    // Encuentra el nuevo índice de la respuesta correcta
+    const newAnswerIndex = optionsWithIndices.findIndex(
+      (item) => item.index === question.answer
+    );
+
+    // Retorna la pregunta actualizada con las opciones mezcladas y el nuevo índice de la respuesta correcta
+    return {
+      ...question,
+      options: shuffledOptions,
+      answer: newAnswerIndex,
+    };
+  };
+
+
+  // Aplicar la mezcla de opciones a las preguntas al cargarlas
+  useEffect(() => {
+    if (questions && questions.length > 0) {
+      // Mezcla las opciones de cada pregunta
+      const shuffled = questions.map((question) => shuffleOptions(question));
+      setShuffledQuestions(shuffled);
+    }
+  }, [questions]);
+
   // Calcular el puntaje por pregunta
   const scorePerQuestion = useMemo(() => {
-    return maxScore / (questions?.length || 1);
-  }, [maxScore, questions]);
+    return maxScore / (shuffledQuestions.length || 1);
+  }, [maxScore, shuffledQuestions]);
 
   // Validaciones y retornos condicionales después de los Hooks
   if (!currentLevel) {
@@ -71,11 +124,11 @@ const Quiz: React.FC = () => {
   if (error) {
     return <p>Error: {error}</p>;
   }
-  if (!questions || questions.length === 0) {
+  if (!shuffledQuestions || shuffledQuestions.length === 0) {
     return <p>No hay preguntas disponibles para este nivel.</p>;
   }
 
-  const currentQuestion = questions[currentQuestionIndex];
+  const currentQuestion = shuffledQuestions[currentQuestionIndex];
 
   const handleOptionClick = (index: number) => {
     if (hasAnswered) return;
@@ -94,7 +147,7 @@ const Quiz: React.FC = () => {
   };
 
   const handleNext = () => {
-    if (currentQuestionIndex < questions.length - 1) {
+    if (currentQuestionIndex < shuffledQuestions.length - 1) {
       setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
       setSelectedOption(null);
       setIsCorrect(null);
@@ -116,7 +169,7 @@ const Quiz: React.FC = () => {
       <div className="flex flex-col min-h-screen bg-gray-100">
         <HeaderQuiz
           currentLevel={currentLevel}
-          totalQuestions={questions.length}
+          totalQuestions={shuffledQuestions.length}
           levelScore={levelScore}
           maxScore={maxScore}
           onExit={handleExit}
@@ -125,7 +178,7 @@ const Quiz: React.FC = () => {
           <QuizResults
             levelScore={levelScore}
             maxScore={maxScore}
-            onRestart={handleRestart} // Eliminamos totalQuestions
+            onRestart={handleRestart}
           />
         </main>
       </div>
@@ -136,7 +189,7 @@ const Quiz: React.FC = () => {
     <div className="flex flex-col min-h-screen bg-gray-100">
       <HeaderQuiz
         currentLevel={currentLevel}
-        totalQuestions={questions.length}
+        totalQuestions={shuffledQuestions.length}
         levelScore={levelScore}
         maxScore={maxScore}
         onExit={handleExit}
@@ -160,7 +213,7 @@ const Quiz: React.FC = () => {
       </main>
       <Footer
         currentQuestionIndex={currentQuestionIndex}
-        totalQuestions={questions.length}
+        totalQuestions={shuffledQuestions.length}
         hasAnswered={hasAnswered}
         handleNext={handleNext}
       />
