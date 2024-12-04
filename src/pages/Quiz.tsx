@@ -58,6 +58,16 @@ const Quiz: React.FC = () => {
       maxScore = 0;
   }
 
+  // Función genérica para mezclar un arreglo utilizando Fisher-Yates Shuffle
+  const shuffleArray = <T,>(array: T[]): T[] => {
+    const newArray = [...array]; // Hacemos una copia para no mutar el arreglo original
+    for (let i = newArray.length - 1; i > 0; i--) {
+      const randomIndex = Math.floor(Math.random() * (i + 1));
+      [newArray[i], newArray[randomIndex]] = [newArray[randomIndex], newArray[i]];
+    }
+    return newArray;
+  };
+
   // Función para mezclar las opciones y ajustar el índice de la respuesta correcta
   const shuffleOptions = (question: Question): Question => {
     // Combina las opciones con sus índices originales
@@ -66,20 +76,14 @@ const Quiz: React.FC = () => {
       index,
     }));
 
-    // Algoritmo Fisher-Yates Shuffle para mezclar las opciones
-    for (let i = optionsWithIndices.length - 1; i > 0; i--) {
-      const randomIndex = Math.floor(Math.random() * (i + 1));
-      [optionsWithIndices[i], optionsWithIndices[randomIndex]] = [
-        optionsWithIndices[randomIndex],
-        optionsWithIndices[i],
-      ];
-    }
+    // Mezcla las opciones utilizando Fisher-Yates Shuffle
+    const shuffledOptionsWithIndices = shuffleArray(optionsWithIndices);
 
     // Extrae las opciones mezcladas
-    const shuffledOptions = optionsWithIndices.map((item) => item.option);
+    const shuffledOptions = shuffledOptionsWithIndices.map((item) => item.option);
 
     // Encuentra el nuevo índice de la respuesta correcta
-    const newAnswerIndex = optionsWithIndices.findIndex(
+    const newAnswerIndex = shuffledOptionsWithIndices.findIndex(
       (item) => item.index === question.answer
     );
 
@@ -91,12 +95,14 @@ const Quiz: React.FC = () => {
     };
   };
 
-
-  // Aplicar la mezcla de opciones a las preguntas al cargarlas
+  // Aplicar la mezcla de preguntas y opciones al cargarlas
   useEffect(() => {
     if (questions && questions.length > 0) {
+      // Mezcla las preguntas
+      const shuffledQuestionsArray = shuffleArray(questions);
+
       // Mezcla las opciones de cada pregunta
-      const shuffled = questions.map((question) => shuffleOptions(question));
+      const shuffled = shuffledQuestionsArray.map((question) => shuffleOptions(question));
       setShuffledQuestions(shuffled);
     }
   }, [questions]);
