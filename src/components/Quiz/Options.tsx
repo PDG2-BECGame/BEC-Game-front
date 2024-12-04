@@ -32,6 +32,10 @@ const Options: React.FC<OptionsProps> = ({
                         bgColor = "bg-gray-300";
                     }
                 }
+
+                // Obtener la letra correspondiente al índice
+                const letter = String.fromCharCode(97 + index) + ')'; // 97 es el código ASCII de 'a'
+
                 return (
                     <button
                         key={index}
@@ -39,7 +43,7 @@ const Options: React.FC<OptionsProps> = ({
                         disabled={hasAnswered}
                         className={`p-4 rounded-lg shadow text-white transition ${bgColor}`}
                     >
-                        {option}
+                        <span className="font-bold mr-2">{letter}</span>{option}
                     </button>
                 );
             })}
