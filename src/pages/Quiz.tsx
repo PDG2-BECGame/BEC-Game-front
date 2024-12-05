@@ -203,7 +203,11 @@ const Quiz: React.FC = () => {
       <main className="flex-grow p-6 flex flex-row items-start justify-center pb-24">
         {hasAnswered && (
           <div className="w-1/4 mr-4">
-            <Feedback isCorrect={isCorrect} feedbackMessage={currentFeedback} />
+            <Feedback
+              isCorrect={isCorrect}
+              feedbackMessage={currentFeedback}
+              correctAnswerIndex={currentQuestion.answer} // Pasa el índice de la respuesta correcta
+            />
           </div>
         )}
         <div className={`flex flex-col items-center ${hasAnswered ? "w-3/4" : "w-full"}`}>
